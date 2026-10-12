@@ -311,6 +311,10 @@ body{overflow-wrap:break-word}
 .accBox .bigAction,.accBox .softAction{width:100%;margin-top:6px}
 #accBtn{font-size:18px!important}
 
+.lbTabs{display:flex;gap:6px;margin:10px 0 6px}.lbTabs button{flex:1;padding:9px 4px;border-radius:12px;border:2px solid #fff;background:rgba(255,255,255,.88);color:#477610;box-shadow:0 3px 0 #8cc92e;font-size:12px}.lbTabs button.sel{background:#ffe329}
+.lbRow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(63,109,13,.09);margin:5px 0;font-size:14px;text-align:left}.lbRow.me{background:#ffe329;color:#3f6d0d}
+.lbPos{width:28px;text-align:center;flex:none}.lbName{display:flex;flex-direction:column;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbName small{opacity:.65;font-size:11px}.lbRow b{margin-left:auto;white-space:nowrap}.lbMe{margin:6px 0 8px;font-size:14px}
+.navrow{gap:5px!important}.navrow button{font-size:clamp(8px,2.7vw,11px)!important;min-height:44px!important;padding:5px 1px!important;border-radius:12px!important;line-height:1.25!important;white-space:nowrap!important}
 </style>
 </head>
 <body>
@@ -334,7 +338,7 @@ body{overflow-wrap:break-word}
     <button id="go" aria-label="Jouer"><svg width="50" height="54" viewBox="0 0 54 58"><path d="M10 7 L47 29 L10 51Z" fill="#fff" stroke="#fff" stroke-width="8" stroke-linejoin="round"/></svg></button>
     <div class="side" id="lgBox" role="button" tabindex="0" aria-label="Voir les ligues"><b id="lg">BRONZE</b><div class="lgMini"><i id="lgBar"></i></div><span id="stats"></span></div>
   </div>
-  <div class="navrow"><button id="shopBtn">🎨 SKINS</button><button id="missionsBtn">🎯 DÉFIS</button><button id="settingsBtn">⚙️ OPTIONS</button></div>
+  <div class="navrow"><button id="shopBtn">🎨<br>SKINS</button><button id="missionsBtn">🎯<br>DÉFIS</button><button id="topBtn">🏆<br>CLASSEMENT</button><button id="settingsBtn">⚙️<br>OPTIONS</button></div>
 </div>
 
 <div class="ov" id="over">
@@ -576,7 +580,7 @@ function finish(){
   const me=P[0],before=lv(S.xp),xpg=(NP>=24?2:1)*(Math.round(me.time)+Math.round((NP+1-me.rank)*80/NP)+me.kills*25);
   const cg=(NP>=24?2:1)*(Math.round(me.time/2)+Math.round((NP+1-me.rank)*32/NP)+me.kills*10),tg=Math.floor(me.time);
   S.xp+=xpg;S.coins+=cg;S.tr=Math.max(0,S.tr+tg);S.games++;S.kills=(S.kills||0)+me.kills;if(me.rank===1)S.wins=(S.wins||0)+1;if(NP>=24&&me.rank<=5)S.bigTop=(S.bigTop||0)+1;if(me.kills>=3)S.k3=(S.k3||0)+1;
-  if(me.time>S.bt)S.bt=me.time;if(me.rank<S.br)S.br=me.rank;save();
+  if(me.time>S.bt)S.bt=me.time;if(me.rank<S.br)S.br=me.rank;save();postScore();
   const after=lv(S.xp),up=after.l>before.l,won=me.rank===1;
   $('ot').textContent=won?'VICTOIRE !':'ÉLIMINÉ';$('ot').style.color=won?'#1f9d4d':'#e0394b';
   $('orank').textContent='#'+me.rank+' / '+NP;
@@ -872,6 +876,7 @@ function loadAccount(id,login){
   const a=curAcc();NAMES[0]=a?a.name.toUpperCase():'TOI';
   const b=$('accBtn');if(a){b.textContent=a.name[0].toUpperCase();b.style.background=avCol(a.name);b.style.color='#fff'}
   $('accScreen').classList.remove('show');closeFeature();menu();
+  if(a&&S.games)postScore();
   if(login&&a){toast('Connecté : '+a.name);sendLoginMail(a)}
 }
 
@@ -882,8 +887,37 @@ function loadAccount(id,login){
 const MAIL_URL='https://script.google.com/macros/s/AKfycbwY3TBG2XbEnGgMhIcqDZ4_z5bjyLBKETx9WByN_ulb3xyICOGzR-J8H3lWh62EDpk/exec';
 function sendLoginMail(a){
   if(!a.mail||!MAIL_URL)return;
-  try{fetch(MAIL_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({to:a.mail,subject:'Connexion à DON\'T STOP ULTIMATE',message:'Salut '+a.name+' ! Tu viens de te connecter à DON\'T STOP ULTIMATE le '+new Date().toLocaleString('fr-FR')+'. Si ce n\'était pas toi, change ton code secret.'})}).catch(()=>{})}catch(e){}
+  try{fetch(MAIL_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({to:a.mail,name:a.name})}).catch(()=>{})}catch(e){}
 }
+
+/* ===== Classement mondial ===== */
+function postScore(){
+  const a=curAcc();if(!a||!MAIL_URL)return;
+  try{fetch(MAIL_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'score',id:a.id,name:a.name,tr:S.tr,bt:+(S.bt||0).toFixed(1),w:S.wins||0,g:S.games||0,l:lv(S.xp).l})}).catch(()=>{})}catch(e){}
+}
+let lbData=null,lbTab='tr';
+function lbRender(){
+  const d=lbData,list=lbTab==='tr'?d.byTr:d.byBt,med=['🥇','🥈','🥉'];
+  const rows=list.map((p,i)=>`<div class="lbRow${p.m?' me':''}"><span class="lbPos">${med[i]||i+1}</span><span class="lbName">${esc(p.n)}<small>Niv. ${+p.l||1} · ${+p.w||0} vict.</small></span><b>${lbTab==='tr'?'🏆 '+(+p.tr||0):(+p.bt||0).toFixed(1)+' s'}</b></div>`).join('');
+  const me=d.me?`<p class="lbMe">Ton rang : <b>#${lbTab==='tr'?d.me.rt:d.me.rb}</b> sur ${d.total} joueur${d.total>1?'s':''}</p>`:'<p class="fine">Joue une partie pour apparaître dans le classement !</p>';
+  openFeature(`<h2>🏆 CLASSEMENT MONDIAL</h2><div class="lbTabs"><button data-t="tr" class="${lbTab==='tr'?'sel':''}">🏆 TROPHÉES</button><button data-t="bt" class="${lbTab==='bt'?'sel':''}">⏱️ RECORD</button></div>${me}${rows||'<p class="fine">Aucun joueur pour le moment.</p>'}<p class="fine">Seuls ton pseudo et tes stats sont partagés.</p>`);
+  $('modalContent').querySelectorAll('.lbTabs button').forEach(b=>b.onclick=()=>{lbTab=b.dataset.t;lbRender()});
+}
+async function openTop(){
+  openFeature('<h2>🏆 CLASSEMENT MONDIAL</h2><p class="fine">Chargement…</p>');
+  const a=curAcc(),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),12000);
+  try{
+    const r=await fetch(MAIL_URL+'?a=top&id='+encodeURIComponent(a?a.id:''),{signal:ctl.signal,cache:'no-store'});
+    const d=await r.json();
+    if(!$('featureModal').classList.contains('show'))return;
+    lbData=d;lbRender();
+  }catch(e){
+    if(!$('featureModal').classList.contains('show'))return;
+    openFeature('<h2>🏆 CLASSEMENT MONDIAL</h2><p>Impossible de charger le classement pour le moment. Vérifie ta connexion et réessaie.</p><button class="bigAction" id="lbRetry">RÉESSAYER</button>');
+    const b=$('lbRetry');if(b)b.onclick=openTop;
+  }finally{clearTimeout(to)}
+}
+$('topBtn').onclick=openTop;
 let accMode='list',accSel=null,accMsg='',accDel=null;
 function accRender(){
   const L=accList(),box=$('accBox');
