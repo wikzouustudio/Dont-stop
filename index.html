@@ -802,25 +802,31 @@ body{background:transparent}
 window.__vw=function(){var r=document.documentElement.getBoundingClientRect();return Math.round(r.width)||innerWidth};window.__vh=function(){var r=document.documentElement.getBoundingClientRect();return Math.max(Math.round(r.height),innerHeight)||innerHeight};
 </script>
 <script id="fullheight-fix">
-/* Plein écran réel en app installée (iOS/Android) : la fenêtre de mise en page peut être plus courte que l'écran -> bande en bas */
+/* Plein écran réel en app installée : la fenêtre de mise en page peut être plus courte que l'écran -> bande en bas */
 (function(){
  var de=document.documentElement,d=null;
  try{d=Object.getOwnPropertyDescriptor(window,'innerHeight')}catch(e){}
  var nat=(d&&d.get)?function(){return d.get.call(window)}:function(){return window.visualViewport?Math.round(visualViewport.height):(de.clientHeight||window.innerHeight)};
  var sa=function(){try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}};
- var H=0;
+ var H=0,info='';
  function calc(){
   var h=nat(),w=window.innerWidth,land=w>h,sw=screen.width||0,sh=screen.height||0;
   var full=land?Math.min(sw,sh):Math.max(sw,sh);
-  H=(sa()&&full>h+3&&full-h<220)?full:0;
+  var oh=window.outerHeight||0;if(oh>full&&oh-full<4)full=oh;
+  var st=sa();
+  H=(st&&full>h+3&&full-h<320)?full:0;
   de.style.setProperty('--app-h',(H||h)+'px');
   de.classList.toggle('sa-fix',!!H);
+  info='standalone: '+st+'\ninnerH: '+h+'  innerW: '+w+'\nscreen: '+sw+'x'+sh+'\nouterH: '+oh+'\nclientH: '+de.clientHeight+'\nvvH: '+(window.visualViewport?Math.round(visualViewport.height):'-')+'\nfix appliquée: '+(H?('oui -> '+H):'non');
  }
  try{if(d&&d.get&&d.configurable)Object.defineProperty(window,'innerHeight',{configurable:true,get:function(){return H||nat()}})}catch(e){}
  calc();
  ['resize','orientationchange','pageshow','focus'].forEach(function(ev){addEventListener(ev,function(){setTimeout(calc,0);setTimeout(calc,250)})});
  document.addEventListener('visibilitychange',function(){if(!document.hidden)calc()});
  window.__vh=function(){return H||nat()};
+ /* diagnostic : 5 appuis rapides dans le coin en haut à gauche */
+ var n=0,t0=0;
+ addEventListener('touchstart',function(e){var t=e.touches[0];if(!t||t.clientX>70||t.clientY>110){n=0;return}var now=Date.now();if(now-t0>2000)n=0;t0=now;if(++n>=5){n=0;calc();var o=document.getElementById('dbgFH');if(!o){o=document.createElement('pre');o.id='dbgFH';o.style.cssText='position:fixed;left:8px;top:120px;z-index:99999;margin:0;padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.85);color:#fff;font:12px/1.4 monospace;white-space:pre;user-select:text;-webkit-user-select:text';o.onclick=function(){o.remove()};document.body.appendChild(o)}o.textContent=info+'\n(touche pour fermer)'}},{passive:true});
 })();
 </script>
 <style>
@@ -5043,5 +5049,37 @@ html.sa-fix{background:#1493ff linear-gradient(180deg,#1493ff 0%,#2bbfff 42%,#4f
 html.sa-fix::before{display:none!important}
 html.sa-fix #menu,html.sa-fix canvas#c{height:var(--app-h)!important}
 </style>
+<script id="band-color">
+/* Bande système du bas : prend en temps réel la couleur du bas de l'écran du jeu */
+(function(){
+ var de=document.documentElement,last='',meta=document.querySelector('meta[name="theme-color"]');
+ var st=document.createElement('style');st.textContent='html{transition:background-color .25s linear}';document.head.appendChild(st);
+ var rx=/rgba?\(\s*(\d+)[,\s]+(\d+)[,\s]+(\d+)(?:[,\s/]+([\d.]+%?))?\s*\)/g;
+ function parse(str,lastOne){var m,r=null;rx.lastIndex=0;while((m=rx.exec(str))){var a=m[4]===undefined?1:(m[4].slice(-1)==='%'?parseFloat(m[4])/100:parseFloat(m[4]));r=[+m[1],+m[2],+m[3],a];if(!lastOne)break}return r}
+ function fromCanvas(c,x,y){try{var rc=c.getBoundingClientRect(),ctx=c.getContext('2d');if(!ctx)return null;var px=Math.max(0,Math.min(c.width-1,Math.round((x-rc.left)*c.width/rc.width))),py=Math.max(0,Math.min(c.height-1,Math.round((y-rc.top)*c.height/rc.height)));var d=ctx.getImageData(px,py,1,1).data;return d[3]>200?[d[0],d[1],d[2],1]:null}catch(e){return null}}
+ function colorAt(x,y){
+  var els=document.elementsFromPoint(x,y);
+  for(var i=0;i<els.length;i++){var el=els[i],cs=getComputedStyle(el);
+   if(cs.display==='none'||cs.visibility==='hidden'||parseFloat(cs.opacity)<.5)continue;
+   if(el.tagName==='CANVAS'){var c=fromCanvas(el,x,y);if(c)return c;continue}
+   var bg=parse(cs.backgroundColor,false);if(bg&&bg[3]>=.9)return bg;
+   var bi=cs.backgroundImage;if(bi&&bi!=='none'){var k=bi.lastIndexOf('linear-gradient(');if(k>=0){var g=parse(bi.slice(k),true);if(g&&g[3]>=.9)return g}}
+  }
+  return null}
+ function tick(){
+  try{
+   var w=window.innerWidth,h=window.innerHeight;
+   var c=colorAt(Math.round(w/2),h-3)||colorAt(Math.round(w*.8),h-3);
+   if(!c)return;
+   var hex='#'+[c[0],c[1],c[2]].map(function(v){return Math.max(0,Math.min(255,v|0)).toString(16).padStart(2,'0')}).join('');
+   if(hex===last)return;last=hex;
+   de.style.setProperty('background-color',hex,'important');
+   if(meta)meta.setAttribute('content',hex);
+  }catch(e){}}
+ setInterval(tick,180);
+ ['touchend','resize','orientationchange','pageshow'].forEach(function(ev){addEventListener(ev,function(){setTimeout(tick,60)},{passive:true})});
+ setTimeout(tick,50);
+})();
+</script>
 </body>
 </html>
