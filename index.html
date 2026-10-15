@@ -801,6 +801,28 @@ body{background:transparent}
 <script>
 window.__vw=function(){var r=document.documentElement.getBoundingClientRect();return Math.round(r.width)||innerWidth};window.__vh=function(){var r=document.documentElement.getBoundingClientRect();return Math.max(Math.round(r.height),innerHeight)||innerHeight};
 </script>
+<script id="fullheight-fix">
+/* Plein écran réel en app installée (iOS/Android) : la fenêtre de mise en page peut être plus courte que l'écran -> bande en bas */
+(function(){
+ var de=document.documentElement,d=null;
+ try{d=Object.getOwnPropertyDescriptor(window,'innerHeight')}catch(e){}
+ var nat=(d&&d.get)?function(){return d.get.call(window)}:function(){return window.visualViewport?Math.round(visualViewport.height):(de.clientHeight||window.innerHeight)};
+ var sa=function(){try{return navigator.standalone===true||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches}catch(e){return false}};
+ var H=0;
+ function calc(){
+  var h=nat(),w=window.innerWidth,land=w>h,sw=screen.width||0,sh=screen.height||0;
+  var full=land?Math.min(sw,sh):Math.max(sw,sh);
+  H=(sa()&&full>h+3&&full-h<220)?full:0;
+  de.style.setProperty('--app-h',(H||h)+'px');
+  de.classList.toggle('sa-fix',!!H);
+ }
+ try{if(d&&d.get&&d.configurable)Object.defineProperty(window,'innerHeight',{configurable:true,get:function(){return H||nat()}})}catch(e){}
+ calc();
+ ['resize','orientationchange','pageshow','focus'].forEach(function(ev){addEventListener(ev,function(){setTimeout(calc,0);setTimeout(calc,250)})});
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)calc()});
+ window.__vh=function(){return H||nat()};
+})();
+</script>
 <style>
 /* icônes 3D flamme + cadeau */
 #stkPill .e{width:20px;height:20px;vertical-align:-.3em}
@@ -1362,6 +1384,7 @@ const COL=['#ff2e93','#ff8a00','#7a4dff','#00b86b','#f43f5e','#0ea5e9','#d4a000'
 const RGB=COL.map(h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));
 const BG=[232,247,196],TAU=6.2832;
 const mixc=(id,f)=>{const c=RGB[id];return`rgb(${BG[0]+(c[0]-BG[0])*f|0},${BG[1]+(c[1]-BG[1])*f|0},${BG[2]+(c[2]-BG[2])*f|0})`};
+const BOTPOOL=["Lucas_FR", "Zyra", "Mathis77", "xKaizen", "Lena.B", "Tom_Gamer", "Nyx", "Hugo_06", "Mimi", "Enzo59", "ShadowX", "Clem", "Jade_Play", "Axou", "Noah13", "LilyPop", "Rayan_YT", "Lou", "Maxime", "Sakura", "Kylian", "Zoé_25", "Oscar", "Tiboo", "Nathan", "Maëlys", "Gaspard", "Inès", "Dylan_", "Alizée", "Ryu", "Pixel", "Tonton_Z", "Mélo", "Yanis", "Camille", "Loan", "Eliott", "Sarah_", "Timéo", "Léna", "KikiGames", "Jules.7", "Manon", "Adam_YT", "Chloé", "Théo", "Anaïs", "Raphaël", "Eva", "Noé", "Louna", "Gabin", "Romane", "Nolan", "Lola", "Ethan", "Océane", "Matteo", "Lilou", "Evan", "Mia", "Sacha", "Jade", "Liam", "Zélie", "Ilyes", "Agathe", "Hamza", "Candice", "Bastien", "Maya", "Corentin", "Héloïse", "Quentin", "Nour", "Valentin", "Elsa", "Alexis", "Margot", "Flavien", "Sofia", "Rémi", "Emma_", "Baptiste", "Clara", "Antoine", "Lisa", "Victor", "Anna", "Kevin_", "Amélie", "Julien", "Laura", "Ismaël", "Pauline", "Karim", "Marion", "Sami", "Julie", "Yassine", "Léa", "Bilal", "Océ", "Wassim", "Cléo", "Mehdi", "Zakaria", "Imane", "Aya", "Rania", "Skyzor", "Vexo", "Frozty", "Blazor", "NovaX", "Drakko", "Zephyr", "Kubo", "Rushy", "Glitchy", "Turbo_", "Snowy", "IceBoy", "Penguin", "Pingu", "Yeti", "Frostik", "Blizzy", "Glacio", "Polar", "Arctic", "Nimbus", "Cobalt", "Mochi", "Bubu", "Choco", "Kiwi", "Noodle", "Waffle", "Muffin", "Tofu", "Panda", "Koala", "Foxy", "Ratchet", "Zorro", "Lynx", "Hawk", "Viper", "Cobra", "Ninja", "Ronin", "Samurai", "Titan", "Atlas", "Orion", "Vega", "Lyra", "Sirius", "Comet", "Astro", "Cosmo", "Rocket", "Jett", "Dash", "Flash", "Bolt", "Spark", "Ember", "Blaze", "Inferno", "Storm", "Thunder", "Raijin", "Hydro", "Aqua", "Tsunami", "Wave", "Reef", "Coral", "Pearl", "Marine", "Kraken", "Orca", "Delfin", "Narval", "Beluga", "Pikou", "Rox", "Trix", "Zuko", "Kiro", "Niko", "Teo", "Remy", "Leo_", "Dan", "Ben", "Sam", "Max", "Alex", "Eli", "Lyam", "Nino", "Ayden", "Ezra", "Soren", "Mael", "Ilan", "Kenzo", "Naël", "Rafa", "Yoan", "Lucho", "Dodo", "Titi", "Gigi", "Fifi", "Coco", "Zaza", "Popo", "Nono", "Lolo", "Toto", "Bobby", "Jojo", "Kéké", "Loulou", "xX_Pro_Xx", "Slayer99", "ProGamer", "NoScope", "Sniper_", "Rekt", "GGEZ", "Clutch", "Ace_", "Tryhard", "Noobie", "Casual", "Speedy", "Drifter", "Slider", "Skater", "Rider", "Racer_", "Phantom", "Ghost_", "Spectre", "Reaper", "Hunter", "Wolf_", "Alpha", "Omega", "Delta", "Sigma", "Zeta", "Beta_", "Gamma", "Echo_", "Kilo", "Romeo", "Tango", "Victor_", "Oscar_", "Zulu", "Mango", "Peach", "Berry", "Lemon", "Cherry", "Candy", "Sugar", "Honey", "Cookie", "Brownie", "Cupcake", "Donut", "Bagel", "Pretzel", "Nacho", "Pizza", "Taco", "Sushi", "Ramen", "Wasabi", "Ketchup"];
 const _MORE='Axel,Bao,Cleo,Dax,Elio,Fox,Gus,Hana,Ivy,Jax,Kai,Luna,Milo,Nia,Otto,Pax,Quin,Rio,Sky,Tao,Uma,Vik,Wren,Yuki,Zoe,Abe,Bea,Cy,Dot,Eve,Fig,Gil'.split(',');
 _MORE.forEach((n,i)=>{NAMES.push(n);const h=((i+8)*137.5)%360,f=k=>{const kk=(k+h/30)%12,a=.75*Math.min(.5,.5),m=Math.max(-1,Math.min(kk-3,9-kk,1));return Math.round(255*(.5-a*m))};const hex='#'+[0,8,4].map(k=>f(k).toString(16).padStart(2,'0')).join('');COL.push(hex);RGB.push([1,3,5].map(j=>parseInt(hex.slice(j,j+2),16)))});
 let ZR0=700;
@@ -2551,6 +2574,7 @@ function skFree(){/* libère la mémoire des skins de bots avant les écrans lou
 function skBusyUI(){try{return (typeof shopEl!=='undefined'&&shopEl.classList.contains('show'))||document.hidden}catch(e){return false}}
 const botSk={};
 function pickBotSkins(){
+  try{const me=String(NAMES[0]||'').toLowerCase(),b=BOTPOOL.slice();for(let j=b.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[b[j],b[r]]=[b[r],b[j]]}let q=0;for(let id=1;id<P.length;id++){let n=b[q++%b.length];if(n.toLowerCase()===me)n=b[q++%b.length];NAMES[id]=n}}catch(e){}
   skWarm(activeSkin);const pool=[];skinData.forEach((x,i)=>{if(x&&x.sp&&!x.rainbow&&i!==activeSkin)pool.push(i)});
   for(let j=pool.length-1;j>0;j--){const r=Math.random()*(j+1)|0;[pool[j],pool[r]]=[pool[r],pool[j]]}
   for(let id=1;id<P.length;id++){const k=pool.length?pool[(id-1)%pool.length]:undefined;botSk[id]=k;
@@ -5013,5 +5037,11 @@ function onClick(e){const tb=e.target.closest('[data-t]');if(tb){show(tb.dataset
  addEventListener('fullscreenchange',function(){dispatchEvent(new Event('resize'))});
 })();
 </script>
+<style id="fullheight-fix-css">
+html.sa-fix,html.sa-fix body{position:fixed!important;top:0!important;left:0!important;right:0!important;bottom:auto!important;width:100%!important;height:var(--app-h)!important;min-height:var(--app-h)!important;overflow:hidden!important}
+html.sa-fix{background:#1493ff linear-gradient(180deg,#1493ff 0%,#2bbfff 42%,#4fe8ee 74%,#80f3d6 100%) no-repeat!important;background-size:100% var(--app-h)!important}
+html.sa-fix::before{display:none!important}
+html.sa-fix #menu,html.sa-fix canvas#c{height:var(--app-h)!important}
+</style>
 </body>
 </html>
