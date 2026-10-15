@@ -920,6 +920,44 @@ html{background-color:#1493ff;min-height:100%}
 html::before{content:"";position:fixed;left:0;right:0;top:-400px;bottom:-400px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#1493ff 0%,#2bbfff 42%,#4fe8ee 74%,#80f3d6 100%)}
 body{width:100%;height:100%}
 </style>
+<style>
+/* ===== Signaler un bug ===== */
+#bugTxt{display:block;width:100%;box-sizing:border-box;min-height:130px;resize:none;margin:8px 0 0;padding:11px 12px;border:2px solid #dfe2fa;border-radius:14px;background:#f6f7ff;color:#191175;font:600 16px/1.4 system-ui,sans-serif!important;text-align:left;user-select:text;-webkit-user-select:text}
+#bugTxt:focus{outline:0;border-color:#ffc928;background:#fff}
+#bugThumbs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px}
+#bugThumbs .bugTh{position:relative;width:78px;height:78px;border-radius:12px;overflow:hidden;border:2px solid #fff;box-shadow:0 2px 0 #5f67d7;background:#fff}
+#bugThumbs .bugTh img{width:100%;height:100%;object-fit:cover;display:block}
+#bugThumbs .bugTh button{position:absolute;right:2px;top:2px;width:24px;height:24px;border-radius:50%;border:0;background:#d13148;color:#fff;font-size:20px;line-height:22px;padding:0}
+#bugMsg{min-height:18px;margin:8px 0 0!important;color:#d13148;font:700 13px system-ui,sans-serif!important}
+#bugCnt{font:600 12px system-ui,sans-serif!important;color:#8a8fbd;text-align:right;margin:2px 4px 0}
+/* ===== Fenêtre bêta ===== */
+#betaOv{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 16px) calc(env(safe-area-inset-right,0px) + 16px) calc(env(safe-area-inset-bottom,0px) + 16px) calc(env(safe-area-inset-left,0px) + 16px);background:radial-gradient(120% 80% at 50% 10%,#5a46f0 0%,#2b25b8 48%,#120c62 100%);color:#fff;user-select:none;-webkit-user-select:none;animation:betaIn .35s ease both;overflow:hidden}
+#betaOv.bye{animation:betaOut .3s ease forwards;pointer-events:none}
+#betaOv canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#betaOv .betaCard{position:relative;width:min(100%,380px);max-height:100%;overflow:auto;-webkit-overflow-scrolling:touch;text-align:center;border:4px solid #fff;border-radius:28px;padding:22px 18px 18px;background:linear-gradient(180deg,#fdfff6,#b9cdff);color:#191175;box-shadow:0 9px 0 #2320cb,0 22px 40px rgba(0,0,40,.5);animation:betaPop .5s .1s cubic-bezier(.3,1.5,.5,1) both}
+#betaOv .betaBadge{display:inline-block;margin:0 0 10px;padding:6px 20px;border-radius:999px;background:linear-gradient(#ff7a59,#e1263a);border:3px solid #fff;box-shadow:0 4px 0 #9c1226;color:#fff;font-size:15px;letter-spacing:2px}
+#betaOv .betaIc{line-height:0;margin:2px 0 8px}#betaOv .betaIc .e{width:62px;height:62px;filter:drop-shadow(0 3px 2px rgba(20,16,100,.28))}#betaOv .betaList li i .e{width:26px;height:26px;vertical-align:0}#betaOv .betaList li span .e{width:1.15em;height:1.15em}#betaOv .betaThx .e{width:1.25em;height:1.25em}
+#betaOv h2{margin:0 0 8px;font-size:25px;line-height:1.1;text-shadow:0 2px #fff;overflow-wrap:anywhere}
+#betaOv .betaLead{margin:0 0 12px;font:600 14.5px/1.5 system-ui,sans-serif}
+#betaOv .betaList{list-style:none;margin:0 0 10px;padding:0;text-align:left}
+#betaOv .betaList li{display:flex;align-items:center;gap:11px;margin:7px 0;padding:9px 11px;border-radius:15px;background:#fff;border:2px solid #dfe5ff;font:600 13.5px/1.4 system-ui,sans-serif}
+#betaOv .betaList li i{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:12px;background:linear-gradient(#e8efff,#cbd8ff);font-style:normal;font-size:20px}
+#betaOv .betaList li.hl{border-color:#ffc928;background:#fffbe6}
+#betaOv .betaThx{margin:10px 0 12px;font:700 13px/1.4 system-ui,sans-serif;color:#4a4f94}
+#betaGo{position:relative;display:block;width:100%;min-height:54px;border:0;border-radius:16px;overflow:hidden;font-size:16px;font-weight:400;letter-spacing:.5px;background:#c9cfee;color:#6a6fa6;box-shadow:0 5px 0 #a3a9d4;-webkit-tap-highlight-color:transparent}
+#betaGo .betaFill{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(#fff36b,#ffc800);opacity:.55;animation:betaFill 10s linear forwards}
+#betaGo .betaTx{position:relative;z-index:1}
+#betaGo.ready{background:linear-gradient(#fff36b,#ffc800);color:#1c1570;box-shadow:0 5px 0 #c68b00;animation:betaPulse 1.2s ease-in-out infinite}
+#betaGo.ready .betaFill{display:none}
+#betaGo.ready:active{transform:translateY(3px);box-shadow:0 2px 0 #c68b00}
+@keyframes betaIn{from{opacity:0}to{opacity:1}}
+@keyframes betaOut{to{opacity:0;transform:scale(1.04)}}
+@keyframes betaPop{from{opacity:0;transform:translateY(30px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes betaFill{to{width:100%}}
+@keyframes betaPulse{50%{transform:scale(1.03)}}
+@media(max-height:640px){#betaOv .betaIc{display:none}#betaOv .betaList li{padding:6px 9px}}
+@media(prefers-reduced-motion:reduce){#betaOv,#betaOv .betaCard,#betaGo.ready{animation:none}}
+</style>
 </head>
 <body class="newui">
 <div id="loader" role="button" aria-label="Passer"><canvas id="ldCv"></canvas><button class="ldSkip" id="ldSkip" type="button"></button><div class="ldBox"><div class="ldLogo" id="ldLogo"></div><div class="ldStage" id="ldStage"></div><div class="ldBar"><i id="ldFill"></i></div><div class="ldPct" id="ldPct">0%</div><div class="ldTip" id="ldTip"></div></div><div class="ldHint" id="ldHint"></div></div>
@@ -3230,8 +3268,109 @@ function renderMissions(){
  openFeature(`<h2>${icoW('target')} DÉFIS</h2><p>${ready?ready+' récompense'+(ready>1?'s':'')+' à récupérer !':'Complète des objectifs pour gagner des pièces.'}</p>${cards}<p class="fine">Les défis sont enregistrés sur cet appareil.</p>`)
 }
 $('modalContent').addEventListener('click',e=>{if(e.target.id==='langToggle')setLang(LANG==='en'?'fr':'en')});
-$('settingsBtn').onclick=()=>openFeature(`<h2>⚙️ OPTIONS</h2><div class="optionRow"><span>Vibrations</span><button id="vibeToggle">${LS.getItem('dontstop_vibe')==='off'?'DÉSACTIVÉ':'ACTIVÉ'}</button></div><div class="optionRow"><span>${LANG==='en'?'Music':'Musique'}</span><button id="musicToggle">${LS.getItem('dontstop_music')==='off'?(LANG==='en'?'OFF':'DÉSACTIVÉE'):(LANG==='en'?'ON':'ACTIVÉE')}</button></div><div class="optionRow"><span>Effets sonores</span><button id="soundToggle">${LS.getItem('dontstop_sound')==='off'?'DÉSACTIVÉS':'ACTIVÉS'}</button></div><div class="optionRow"><span>Langue / Language</span><button id="langToggle">${LANG==='en'?'ENGLISH':'FRANÇAIS'}</button></div><div class="optionRow"><span>Animations réduites</span><button id="motionToggle">${LS.getItem('dontstop_motion')==='on'?'ACTIVÉ':'DÉSACTIVÉ'}</button></div><div class="optionRow"><span>Rappels</span><button id="remToggle">${window.ntLabel?ntLabel():'DÉSACTIVÉS'}</button></div><p class="fine">Tes préférences sont enregistrées sur cet appareil.</p><button class="softAction" id="resetProgress">Réinitialiser ma progression</button>`);
+$('settingsBtn').onclick=()=>openFeature(`<h2>⚙️ OPTIONS</h2><div class="optionRow"><span>Vibrations</span><button id="vibeToggle">${LS.getItem('dontstop_vibe')==='off'?'DÉSACTIVÉ':'ACTIVÉ'}</button></div><div class="optionRow"><span>${LANG==='en'?'Music':'Musique'}</span><button id="musicToggle">${LS.getItem('dontstop_music')==='off'?(LANG==='en'?'OFF':'DÉSACTIVÉE'):(LANG==='en'?'ON':'ACTIVÉE')}</button></div><div class="optionRow"><span>Effets sonores</span><button id="soundToggle">${LS.getItem('dontstop_sound')==='off'?'DÉSACTIVÉS':'ACTIVÉS'}</button></div><div class="optionRow"><span>Langue / Language</span><button id="langToggle">${LANG==='en'?'ENGLISH':'FRANÇAIS'}</button></div><div class="optionRow"><span>Animations réduites</span><button id="motionToggle">${LS.getItem('dontstop_motion')==='on'?'ACTIVÉ':'DÉSACTIVÉ'}</button></div><div class="optionRow"><span>Rappels</span><button id="remToggle">${window.ntLabel?ntLabel():'DÉSACTIVÉS'}</button></div>${(window.pwOpen&&!(navigator.standalone||matchMedia('(display-mode: standalone)').matches||matchMedia('(display-mode: fullscreen)').matches))?'<button class="softAction" id="fsBtn">'+icoW('full')+' '+T2('JOUER EN PLEIN ÉCRAN','PLAY FULL SCREEN')+'</button>':''}<button class="softAction" id="bugBtn">${icoW('bug')} ${T2('SIGNALER UN BUG','REPORT A BUG')}</button><p class="fine">Tes préférences sont enregistrées sur cet appareil.</p><button class="softAction" id="resetProgress">Réinitialiser ma progression</button>`);
 $('modalContent').addEventListener('click',e=>{if(e.target.id==='vibeToggle'){const off=LS.getItem('dontstop_vibe')!=='off';LS.setItem('dontstop_vibe',off?'off':'on');e.target.textContent=off?'DÉSACTIVÉ':'ACTIVÉ';if(!off)buzz(45)}if(e.target.id==='soundToggle'){const off=LS.getItem('dontstop_sound')!=='off';LS.setItem('dontstop_sound',off?'off':'on');e.target.textContent=off?'DÉSACTIVÉS':'ACTIVÉS';if(!off)sfx('boost')}if(e.target.id==='musicToggle'){const off=LS.getItem('dontstop_music')!=='off';LS.setItem('dontstop_music',off?'off':'on');e.target.textContent=off?(LANG==='en'?'OFF':'DÉSACTIVÉE'):(LANG==='en'?'ON':'ACTIVÉE');try{window.bgMusic.refresh()}catch(_){}}if(e.target.id==='motionToggle'){const on=LS.getItem('dontstop_motion')!=='on';LS.setItem('dontstop_motion',on?'on':'off');document.body.classList.toggle('reduced-motion',on);e.target.textContent=on?'ACTIVÉ':'DÉSACTIVÉ'}});
+/* ===== icônes ajoutées : bug, flask, camera, heart ===== */
+Object.assign(ICONS,{
+bug:[['M6.4 11.2L3.4 10M6 14.5H2.8M6.6 17.8l-3 1.5M17.6 11.2l3-1.2M18 14.5h3.2M17.4 17.8l3 1.5M10.4 4.2L8.8 2.2M13.6 4.2l1.6-2',0,OL,1.4],['M12 7.4a6.2 6.2 0 0 1 6.200 6.400c0 3.600-2.800 6.600-6.200 6.600s-6.200-3-6.200-6.600A6.200 6.200 0 0 1 12 7.400z','#ff4d5e',OL,1.5],['M8.600 7.600c0-2 1.400-3.400 3.400-3.400s3.400 1.400 3.400 3.400z','#3a2f9c',OL,1.4],['M12 7.600V20.400',0,OL,1.3],['M8.600 11.800a1.100 1.100 0 1 0 .01 0zM15.400 11.800a1.100 1.100 0 1 0 .01 0zM9.200 15.800a1.100 1.100 0 1 0 .01 0zM14.800 15.800a1.100 1.100 0 1 0 .01 0z',OL]],
+flask:[['M9.200 3h5.600v5.200l4.600 9.400A2.700 2.700 0 0 1 17 21.400H7a2.700 2.700 0 0 1-2.400-3.800l4.600-9.400z','#eaf4ff'],['M6.500 15h11l1.800 3.600c.5 1.100-.3 2.400-1.500 2.400H6.200c-1.200 0-2-1.300-1.500-2.400z','#4be37a'],['M9.200 3h5.600v5.200l4.600 9.400A2.700 2.700 0 0 1 17 21.400H7a2.700 2.700 0 0 1-2.400-3.800l4.600-9.400z',0,OL,1.5],['M8 3h8',0,OL,1.900],['M9.800 17.200a1 1 0 1 0 .01 0zM13.800 18.600a.8.8 0 1 0 .01 0zM12.200 15.800a.6.6 0 1 0 .01 0z','#fff'],['M10.800 5.800v2.800',0,'#fff',1.300]],
+camera:[['M3.600 8h3.200l1.500-2.500h7.400L17.200 8h3.200a1 1 0 0 1 1 1v9.500a1 1 0 0 1-1 1H3.600a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z','#b9cdff',OL,1.5],['M12 9.500a4 4 0 1 0 0 8 4 4 0 0 0 0-8z','#fff',OL,1.5],['M12 11.500a2 2 0 1 0 0 4 2 2 0 0 0 0-4z','#37bdf5',OL,1.2],['M5.200 10.400h1.600',0,OL,1.4]],
+full:[['M7 2.800h10a2.200 2.200 0 0 1 2.200 2.200v14a2.200 2.200 0 0 1-2.200 2.200H7A2.200 2.200 0 0 1 4.800 19V5A2.200 2.200 0 0 1 7 2.800z','#7fb6ff',OL,1.5],['M8.600 9V7.600a1 1 0 0 1 1-1H11M15.400 9V7.600a1 1 0 0 0-1-1H13M8.600 15v1.400a1 1 0 0 0 1 1H11M15.400 15v1.400a1 1 0 0 1-1 1H13',0,'#fff',1.800]],
+heart:[['M12 20.600C5 15.600 3 12.200 3 8.900a4.700 4.700 0 0 1 4.700-4.700c1.800 0 3.300.9 4.300 2.600 1-1.700 2.500-2.600 4.300-2.600A4.700 4.700 0 0 1 21 8.900c0 3.300-2 6.700-9 11.700z','#ff4d6d',OL,1.5],['M6 8.300c.2-1 .9-1.600 1.800-1.800',0,'#fff',1.400]]
+});
+/* ===== SIGNALER UN BUG (envoi vers MAIL_URL, action "bug") ===== */
+(function(){
+ const MAXI=3,GAP=30000,KEY='dontstop_bug_t';
+ let imgs=[],draft='',busy=false;
+ const msg=t=>{const m=$('bugMsg');if(m)m.textContent=t||''};
+ function thumbs(){const b=$('bugThumbs');if(!b)return;
+  b.innerHTML=imgs.map((u,i)=>'<div class="bugTh"><img alt="" src="'+u+'"><button type="button" data-bugdel="'+i+'" aria-label="Retirer">&times;</button></div>').join('');
+  const p=$('bugPick');if(p)p.style.display=imgs.length>=MAXI?'none':''}
+ function view(){
+  openFeature('<h2>'+icoW('bug')+' '+T2('SIGNALER UN BUG','REPORT A BUG')+'</h2>'
+   +'<p>'+T2('Décris le problème : que faisais-tu, que s\'est-il passé ?','Describe the problem: what were you doing, what happened?')+'</p>'
+   +'<textarea id="bugTxt" maxlength="1500" placeholder="'+T2('Ex : le bouton Jouer ne marche plus après le shop…','E.g. the Play button stops working after the shop…')+'">'+esc(draft)+'</textarea>'
+   +'<div id="bugCnt"></div>'
+   +'<div id="bugThumbs"></div>'
+   +'<input type="file" id="bugFile" accept="image/*" multiple hidden>'
+   +'<button class="softAction" id="bugPick" type="button">'+icoW('camera')+' '+T2('AJOUTER DES IMAGES','ADD IMAGES')+' (max '+MAXI+')</button>'
+   +'<p id="bugMsg"></p>'
+   +'<button class="bigAction" id="bugSend" type="button">'+T2('ENVOYER','SEND')+'</button>'
+   +'<button class="softAction" id="bugBack" type="button">'+T2('RETOUR','BACK')+'</button>');
+  thumbs();cnt()}
+ function cnt(){const t=$('bugTxt'),c=$('bugCnt');if(t&&c)c.textContent=t.value.length+' / 1500'}
+ function shrink(f){return new Promise((ok,ko)=>{const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{try{const k=Math.min(1,1000/Math.max(im.width,im.height)),c=document.createElement('canvas');
+   c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));
+   const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+   URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.72))}catch(e){URL.revokeObjectURL(u);ko(e)}};
+  im.onerror=()=>{URL.revokeObjectURL(u);ko(new Error('img'))};im.src=u})}
+ async function addFiles(list){
+  const fs=[].slice.call(list||[]).filter(f=>/^image\//.test(f.type));
+  for(const f of fs){
+   if(imgs.length>=MAXI){msg(T2('3 images maximum.','3 images max.'));break}
+   try{imgs.push(await shrink(f));msg('');thumbs()}catch(e){msg(T2('Image illisible (essaie un autre format).','Unreadable image (try another format).'))}}}
+ async function send(){
+  if(busy)return;
+  const t=(($('bugTxt')||{}).value||'').trim();draft=t;
+  if(t.length<5&&!imgs.length){msg(T2('Écris ton bug ou ajoute une image.','Describe the bug or add an image.'));return}
+  if(Date.now()-(+LS.getItem(KEY)||0)<GAP){msg(T2('Attends quelques secondes avant de renvoyer.','Wait a few seconds before sending again.'));return}
+  const b=$('bugSend');busy=true;b.disabled=true;b.textContent=T2('ENVOI…','SENDING…');msg('');
+  let a=null,lvl=0;try{a=curAcc()}catch(e){}try{lvl=lv(S.xp).l}catch(e){}
+  const body={a:'bug',txt:t,imgs:imgs.slice(),name:a?a.name:'',id:a?a.id:'',lang:LANG||'fr',lvl:lvl,games:S.games||0,
+   ua:navigator.userAgent,scr:innerWidth+'x'+innerHeight+'@'+(window.devicePixelRatio||1),
+   pwa:!!(navigator.standalone||matchMedia('(display-mode: standalone)').matches),t:new Date().toISOString()};
+  try{
+   await fetch(MAIL_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+   LS.setItem(KEY,String(Date.now()));imgs=[];draft='';busy=false;
+   openFeature('<h2>'+icoW('bug')+' '+T2('MERCI\u00a0!','THANK YOU!')+'</h2><div class="dailyPrize">'+icoW('check')+'</div><p>'+T2('Ton signalement a bien été envoyé. Merci de nous aider à améliorer le jeu !','Your report was sent. Thanks for helping us improve the game!')+'</p><button class="bigAction" id="closeDaily">OK</button>');
+  }catch(e){
+   busy=false;const bb=$('bugSend');if(bb){bb.disabled=false;bb.textContent=T2('ENVOYER','SEND')}
+   msg(T2('Envoi impossible. Vérifie ta connexion et réessaie.','Could not send. Check your connection and try again.'))}}
+ const mc=$('modalContent');
+ mc.addEventListener('click',e=>{const t=e.target,id=t.id;
+  if(id==='fsBtn'){closeFeature();setTimeout(()=>{try{pwOpen()}catch(e){}},230)}
+  else if(id==='bugBtn'){imgs=[];draft='';view()}
+  else if(id==='bugPick'){const f=$('bugFile');if(f)f.click()}
+  else if(id==='bugSend')send();
+  else if(id==='bugBack'){draft=(($('bugTxt')||{}).value)||'';$('settingsBtn').click()}
+  else if(t.dataset&&t.dataset.bugdel!==undefined){imgs.splice(+t.dataset.bugdel,1);thumbs()}});
+ mc.addEventListener('change',e=>{if(e.target.id==='bugFile'){addFiles(e.target.files).then(()=>{e.target.value=''})}});
+ mc.addEventListener('input',e=>{if(e.target.id==='bugTxt')cnt()});
+})();
+
+/* ===== FENÊTRE BÊTA (après l'inscription, skip possible après 5 s) ===== */
+window.betaShow=function(){
+ if(document.getElementById('betaOv'))return;
+ let nm='';try{nm=curAcc().name}catch(e){}
+ const d=document.createElement('div');d.id='betaOv';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');
+ d.innerHTML=`<div class="betaCard">
+  <div class="betaBadge">BÊTA</div>
+  <div class="betaIc">${icoW('flask')}</div>
+  <h2>${nm?T2('BIENVENUE, ','WELCOME, ')+esc(nm)+'\u00a0!':T2('BIENVENUE\u00a0!','WELCOME!')}</h2>
+  <p class="betaLead">${T2('DON\'T STOP est encore en <b>version bêta</b>. Tu fais partie des premiers joueurs : ton aide compte énormément !','DON\'T STOP is still in <b>beta</b>. You are one of our first players: your help means a lot!')}</p>
+  <ul class="betaList">
+   <li><i>${icoW('gamepad')}</i><span>${T2('Joue normalement et <b>teste tout</b> : modes, shop, défis…','Play as usual and <b>test everything</b>: modes, shop, quests…')}</span></li>
+   <li><i>${icoW('bug')}</i><span>${T2('Un bug ou un truc bizarre ? <b>Signale-le&nbsp;!</b>','Found a bug or something odd? <b>Report it!</b>')}</span></li>
+   <li class="hl"><i>${icoW('gear')}</i><span>${T2('Ouvre <b>Paramètres ','Open <b>Settings ')}${icoW('gear')}${T2(' → SIGNALER UN BUG</b>, écris ce qui s\'est passé et ajoute une capture d\'écran si tu peux.',' → REPORT A BUG</b>, tell us what happened and add a screenshot if you can.')}</span></li>
+  </ul>
+  <p class="betaThx">${T2('Merci de nous aider à rendre le jeu parfait','Thanks for helping us make the game perfect')} ${icoW('heart')}</p>
+  <button id="betaGo" type="button" disabled><span class="betaFill"></span><span class="betaTx"></span></button>
+ </div>`;
+ document.body.appendChild(d);
+ try{iconify(d)}catch(e){}
+ const btn=d.querySelector('#betaGo'),tx=d.querySelector('.betaTx'),t0=Date.now(),SEC=10;let done=false;
+ const left=()=>Math.max(0,Math.ceil(SEC-(Date.now()-t0)/1000));
+ const upd=()=>{const l=left();
+  if(l>0){tx.textContent=T2('Patiente '+l+' s…','Please wait '+l+' s…');return}
+  clearInterval(iv);done=true;btn.disabled=false;btn.classList.add('ready');tx.textContent=T2('J\'AI COMPRIS\u00a0!','GOT IT!');try{buzz(25)}catch(e){}};
+ const iv=setInterval(upd,200);upd();
+ const close=()=>{if(!done)return;d.classList.add('bye');setTimeout(()=>d.remove(),320)};
+ btn.addEventListener('click',close);
+ /* impossible de passer avant la fin du compte à rebours : on bloque aussi la touche Échap */
+ d.addEventListener('keydown',e=>{if(e.key==='Escape'&&!done)e.preventDefault()});
+ d.addEventListener('touchmove',e=>{if(!e.target.closest('.betaCard'))e.preventDefault()},{passive:false});
+};
 const GIFT_MS=864e5;
 const giftLeft=()=>Math.max(0,+(LS.getItem('dontstop_gift_next')||0)-Date.now());
 const fmtT=ms=>{const s=Math.ceil(ms/1000);return[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(v=>String(v).padStart(2,'0')).join(':')};
@@ -3497,7 +3636,7 @@ function showLang(){
 #langScreen .lgTxt{flex:1;text-align:left;min-width:0}
 #langScreen .lgTxt b{display:block;font-size:24px;line-height:1;letter-spacing:.6px;font-weight:400}
 #langScreen .lgTxt small{display:block;margin-top:5px;font-size:12px;letter-spacing:.4px;opacity:.72;font-family:system-ui,sans-serif;font-weight:700}
-#langScreen .lgGo{flex:none;width:38px;height:38px;border-radius:50%;background:linear-gradient(#fff36b,#ffc800);box-shadow:0 3px 0 #bd8500;display:grid;place-items:center;font-size:15px;color:#170f6b}
+#langScreen .lgGo{position:static;left:auto;right:auto;transform:none;margin:0;padding:0;border:0;line-height:1;flex:none;width:38px;height:38px;border-radius:50%;background:linear-gradient(#fff36b,#ffc800);box-shadow:0 3px 0 #bd8500;display:grid;place-items:center;font-size:15px;color:#170f6b}
 #langScreen .lgFoot{margin-top:6px;font-size:11px;letter-spacing:1.4px;opacity:.55;font-family:system-ui,sans-serif;font-weight:700}
 @media(max-height:560px){#langScreen .lgSub{margin:8px 0 12px}#langScreen .lgCard{margin-bottom:9px;padding:8px 14px 8px 10px}#langScreen .lgFlag{width:54px;height:54px}}
 @media(prefers-reduced-motion:reduce){#langScreen *{animation-duration:0s!important;animation-delay:0s!important}#langScreen .lgCard{opacity:1;transform:none}}`;document.head.appendChild(st)}
@@ -4233,7 +4372,7 @@ let pwTk=0;setInterval(()=>{try{
   const busy=ldBusy||pwEl.classList.contains('on')||scr.classList.contains('on')||$('shopScreen').classList.contains('show')||(fm&&fm.classList.contains('show'));
   if(state!=='menu'||busy){pwTk=0;return}pwTk++;
   if(pwStand()){if(!pwDone())pwClaimNow();return}
-  if(pwDone()||pwTk<2||(S.games|0)<2)return;
+  if(pwDone()||pwTk<2||(S.games|0)<(pwPlat()==='ios'?1:2)||document.getElementById('betaOv'))return;
   const o=J('dontstop_pwn',{d:'',n:0}),k=dayKey();if(o.n>=3||o.d===k)return;o.d=k;o.n++;LS.setItem('dontstop_pwn',JSON.stringify(o));pwShow('inv')}catch(e){}},3000);
 })();
 </script>
@@ -4577,7 +4716,7 @@ window.accMake=async function(name,pin,mail){
  if(st==='taken'){accMsg=T2('Ce pseudo est déjà pris. Si c\'est le tien : « J\'ai déjà un compte ».','This username is taken. If it\'s yours, use "I already have an account".');accRender();$('accName').value=name;$('accPin').value=pin;$('accMail').value=mail;return}
  const nid='u'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),L=accList();
  PK.forEach(k=>{LSRAW.removeItem(k);LSRAW.removeItem(nid+':'+k)});
- L.push({id:nid,name,pin:hashPin(pin,nid),key,mail,ts:Date.now()});accSave(L);loadAccount(nid,true);setTimeout(()=>syncPush(true),600)};
+ L.push({id:nid,name,pin:hashPin(pin,nid),key,mail,ts:Date.now()});accSave(L);loadAccount(nid,true);setTimeout(()=>syncPush(true),600);try{window.betaShow()}catch(e){}};
 window.accLogin=async function(){
  const name=$('accName').value.trim(),pin=$('accPin').value.trim();
  if(name.length<2||!/^\d{4}$/.test(pin)){setMsg(T2('Entre ton pseudo et ton code à 4 chiffres','Enter your username and 4-digit code'));return}
