@@ -28,6 +28,7 @@ canvas#c{position:absolute;inset:0;width:100%;height:100%}
 #wt{position:absolute;top:24%;left:0;right:0;text-align:center;font-size:19px;opacity:0;pointer-events:none}
 #hud{position:absolute;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0;display:flex;justify-content:space-between;pointer-events:none}
 #t{font-size:34px;line-height:1}
+body[data-st=play] .pill,body[data-st=dying] .pill,body[data-st=count] .pill{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
 .pill{display:inline-flex;align-items:center;gap:6px;background:var(--glass);border:1.5px solid rgba(255,255,255,.55);border-radius:999px;padding:4px 13px;font-size:13px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 #lb{margin-top:8px;font-size:12px;line-height:1.75;min-width:132px;background:rgba(23,15,107,.45);border-radius:14px;padding:6px}
 #lb div{display:flex;gap:7px;align-items:center;padding:0 6px;border-radius:7px}
@@ -1452,6 +1453,7 @@ let NP=8,abil={k:'boost',i:'⚡',n:'BOOST',cd:6};
 let mets=[],craters=[],wind={t:0,x:0,y:0},evT=0,metLeft=0,metT=0;
 let dtG=.016,spdLvl=0,SPDM=1,zbX=0,spk=[],gemT=1,rainT=22,gcomb=0,gct=-99;
 let hitStop=0,zoomP=0,zb=0,flashA=0,boostTime=0,boostCooldown=0,toastTimer=0,audioCtx=null,items=[],itT=2;
+const SPEEDK=1.3,TURNK=1.25; // vitesse de base des joueurs (+30 %) et agilité adaptée
 const MODECFG={hunt:{speed:1.05,zone:5,trail:1},classic:{speed:1,zone:5,trail:1},rush:{speed:1.6,zone:13,trail:.55},crazy:{get speed(){return 1.05+.5*Math.sin(t*1.7)},zone:4,trail:1.7},race:{speed:1.25,zone:0,trail:.6}};
 function toast(msg){buzz(18);const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',1600)}
 function sfx(kind){if(LS.getItem('dontstop_sound')==='off')return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.value=kind==='boost'?620:kind==='win'?880:440;g.gain.setValueAtTime(.055,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.16);o.start();o.stop(audioCtx.currentTime+.17)}catch(e){}}
@@ -1532,7 +1534,7 @@ function hit(x,y,p,r2,m){
 function ai(p,dt){
   p.cd-=dt;p.pw=Math.max(0,(p.pw||0)-dt);if(p.cd>0)return;
   p.cd=(.035+Math.random()*.03)*(NP>16?1.8:NP>10?1.3:1);
-  const cfg=MODECFG[gameMode]||MODECFG.classic,sp=(105+Math.min(t,80))*cfg.speed*SPDM*(p.hu?1.38:1);
+  const cfg=MODECFG[gameMode]||MODECFG.classic,sp=(105+Math.min(t,80))*SPEEDK*cfg.speed*SPDM*(p.hu?1.38:1);
   const look=Math.max(130,sp*1.15),R2=(look+40)**2;
   // obstacles proches : traînées (hors queue immédiate), têtes adverses prédites, mines
   const pts=[];
@@ -1714,7 +1716,7 @@ function lvlUpFx(){
 function update(dt){
   t+=dt;{const L=RACE?0:Math.min(9,Math.floor(t/14));if(L>spdLvl){spdLvl=L;if(state==='play')lvlUpFx()}SPDM=RACE?1:1+.08*spdLvl}const cfg=MODECFG[gameMode]||MODECFG.classic;zoneR=RACE?RW:Math.max(150,ZR0-Math.max(0,t-10)*cfg.zone*ZR0/700);
   boostTime=Math.max(0,boostTime-dt);boostCooldown=Math.max(0,boostCooldown-dt);
-  const sp=RACE?RSP:(105+Math.min(t,80))*cfg.speed*SPDM,life=Math.min((3+t*.07)*cfg.trail/(1+.04*spdLvl),8),dying=[];
+  const sp=RACE?RSP:(105+Math.min(t,80))*SPEEDK*cfg.speed*SPDM,life=Math.min((3+t*.07)*cfg.trail/(1+.04*spdLvl),8)/(RACE?1:Math.pow(SPEEDK,.8)),dying=[];
   {const bb=BB||(BB=$('boostBtn'));if(bb){const cdv=boostCooldown>0;if(cdv!==BBc){BBc=cdv;bb.classList.toggle('cooldown',cdv)}
     const lab=cdv?Math.ceil(boostCooldown):'';if(lab!==BBl){BBl=lab;$('boostLabel').textContent=lab}
     const pr=abil.cd?Math.round(360*boostCooldown/abil.cd):0;if(pr!==BBp){BBp=pr;bb.style.setProperty('--p',pr+'deg')}}}
@@ -1734,7 +1736,7 @@ function update(dt){
     p.sh=Math.max(0,p.sh-dt);p.gh=Math.max(0,(p.gh||0)-dt);p.mg=Math.max(0,(p.mg||0)-dt);p.rb=Math.max(0,(p.rb||0)-dt);p.slow=Math.max(0,(p.slow||0)-dt);
     if(p.id)(RACE?aiRace:ai)(p,dt);
     let d=p.tgt-p.a;d=Math.atan2(Math.sin(d),Math.cos(d));
-    const m=(RACE?6.4:4*(1+.07*spdLvl))*dt,ap=Math.max(-m,Math.min(m,d));p.a+=ap;if(!p.id&&!RACE)driftStep(p,Math.abs(ap)/m,dt);
+    const m=(RACE?6.4:4*TURNK*(1+.07*spdLvl))*dt,ap=Math.max(-m,Math.min(m,d));p.a+=ap;if(!p.id&&!RACE)driftStep(p,Math.abs(ap)/m,dt);
     const pSpeed=1.1*sp*(p.id===0&&boostTime>0?1.8:1)*(p.hu?1.38:1)*(gameMode==='hunt'&&!p.hu?.95:1)*(p.rb>0?(RACE?1.4:1.6):1)*(p.slow>0?.55:1)*(RACE&&p.id?raceBk(p):1)*(RACE&&!p.id?raceAssist(p):1)*(p.dr?1.22:1)*((!p.id&&!RACE)?driftMul(p):1);
     p.x+=Math.cos(p.a)*pSpeed*dt;p.y+=Math.sin(p.a)*pSpeed*dt;
     for(const c of curs)if((p.x-c.x)**2+(p.y-c.y)**2<c.r*c.r){p.x+=c.ax*dt;p.y+=c.ay*dt}
@@ -1961,10 +1963,10 @@ function tag(x,y,txt,fs,gold){txt=tx(txt);
 }
 
 let DPRQ=2,DPR=Math.min(devicePixelRatio||1,2),pfAvg=16.7,pfBad=0;
-function size(){DPR=Math.min(DPRQ,devicePixelRatio||1);cv.width=Math.round(__vw()*DPR);cv.height=Math.round(__vh()*DPR)}
+function size(){DPR=Math.min(DPRQ,devicePixelRatio||1,Math.sqrt(3.2e6/Math.max(1,__vw()*__vh())));DPR=Math.max(1,DPR);cv.width=Math.round(__vw()*DPR);cv.height=Math.round(__vh()*DPR)}
 /* si la partie tourne durablement sous ~38 img/s, on baisse un peu la résolution du canvas (jamais sous 1.5x) */
 function perfWatch(ms){if(state!=='play'||ms>100||ms<=0)return;pfAvg+=(ms-pfAvg)*.05;
-  if(pfAvg>26&&DPRQ>1.25&&DPR>1.25){if(++pfBad>90){pfBad=0;DPRQ=Math.max(1.25,DPRQ-.25);pfAvg=16.7;size()}}else pfBad=0}
+  if(pfAvg>21&&DPRQ>1&&DPR>1.05){if(++pfBad>40){pfBad=0;DPRQ=Math.max(1,Math.min(DPRQ,DPR)-.25);pfAvg=16.7;size()}}else pfBad=0}
 addEventListener('resize',size);size();
 
 function drawMine(c,m,now){
@@ -2315,7 +2317,8 @@ function drawLobbyBg(now){
     c.globalAlpha=.85;c.beginPath();c.arc(x,y,11,0,TAU);c.fillStyle=COL[o.c];c.fill();c.lineWidth=2.4;c.strokeStyle='#fff';c.stroke();
     c.fillStyle='#fff';c.beginPath();c.arc(x+3,y-3,2.4,0,TAU);c.fill();c.globalAlpha=1}
 }
-function loop(now){if(document.body.dataset.st!==state)document.body.dataset.st=state;{const pb=$('pauseBtn'),v=(state==='play'||state==='dying'||state==='paused')?'block':'none';if(pb.style.display!==v)pb.style.display=v}
+function loop(now){if(now-last<12){requestAnimationFrame(loop);return}
+  if(document.body.dataset.st!==state)document.body.dataset.st=state;{const pb=$('pauseBtn'),v=(state==='play'||state==='dying'||state==='paused')?'block':'none';if(pb.style.display!==v)pb.style.display=v}
   perfWatch(now-last);const dt=Math.min((now-last)/1000,.05);last=now;dtG=Math.max(.004,dt);for(const p of P)if(p.jp>0)p.jp=Math.max(0,p.jp-dt*3.2);
   shake=Math.max(0,shake-dt);
   {const sk=skinData[activeSkin];if(sk&&sk.rainbow){const h=hsl2hex((now/(sk.fast?6:14))%360,90,55);COL[0]=h;RGB[0]=[1,3,5].map(j=>parseInt(h.slice(j,j+2),16))}}
