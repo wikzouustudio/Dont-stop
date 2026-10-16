@@ -1225,7 +1225,7 @@ raf=requestAnimationFrame(frame);
 <div id="toast"></div><div id="dopa" class="sh"></div><div id="lvlUp"></div><button id="boostBtn" aria-label="Pouvoir spécial"><span id="boostIc">⚡</span><span id="boostLabel"></span><span id="boostName">BOOST</span></button><div id="hud"><div><div id="t" class="sh">0.0</div><div class="pill" id="sub" style="margin-top:6px"></div><div class="pill" id="spdPill"><span id="spdT"></span><i><b id="spdB"></b></i></div><div id="lb"></div></div><div id="feed"></div><button id="pauseBtn" aria-label="Pause">Ⅱ</button></div>
 <div id="joy"><div id="knob"></div></div>
 <canvas id="mm" width="208" height="208"></canvas>
-<div id="cd"><div id="cdn" class="sh"></div><div class="w">Tu es l'orbe à <b style="color:var(--gold)">contour doré</b> (TOI)</div></div>
+<div id="cd"><div id="cdn" class="sh"></div><div class="w">Tu es l'orbe à <b style="color:var(--gold)">contour doré</b> (TOI)</div><div class="w" id="cdm" style="margin-top:8px;max-width:86%;line-height:1.35"></div></div>
 
 <div class="ov on" id="menu"><canvas id="bgfx"></canvas>
   <h1 class="sh">DON'T<br>STOP</h1>
@@ -1294,7 +1294,7 @@ document.addEventListener('click',e=>{if(e.target.closest&&e.target.closest('but
 
 /* ===== Langue / Language ===== */
 let LANG=LSRAW.getItem('dontstop_lang')||'';
-const TR_LIST=[["commun","common"],["épique","epic"],["légendaire","legendary"],["pas mal","not bad"],["beau tirage","nice draw"],["ça chauffe","it's heating up"],["arrête chaque rouleau sur ce que tu veux","stop each reel on whatever you want"],["c'est parti","let's go"],["sillage", "slipstream"], ["longue course sinueuse", "long winding race"], ["longue course avec des virages", "long race with plenty of turns"], ["ramasse les turbos", "collect the turbos"], ["ramasse les", "grab the"], ["pour accélérer", "to speed up"], ["reste sur la piste", "stay on the track"], ["retour piste", "back on track"], ["course terminée", "race finished"], ["turbos", "turbos"], ["course", "race"], ["circuit", "track"], ["retourne vers le centre", "return to the center"], ["tu es l'orbe à", "you are the orb with a"], ["contour doré", "golden outline"], ["toi", "you"], ["niv.", "Lv."], ["niveau", "level"], ["débloqué", "unlocked"], ["parties", "games"], ["partie énorme", "huge game"], ["partie", "game"], ["défis", "challenges"], ["classement mondial", "world leaderboard"], ["classement", "leaderboard"], ["rejouer", "play again"], ["reprends quand tu es prêt", "resume when you're ready"], ["reprendre", "resume"], ["tirage au sort", "random draw"], ["pouvoir spécial", "special power"], ["comptes", "accounts"], ["compte", "account"], ["cadeau quotidien", "daily gift"], ["aide", "help"], ["jouer", "play"], ["voir les ligues", "view leagues"], ["fermer", "close"], ["supprimer le code", "remove code"], ["supprimer", "delete"], ["classique", "classic"], ["rapide", "fast"], ["folie", "crazy"], ["chasseur", "hunter"], ["banquise", "ice floe"], ["piliers", "pillars"], ["carré glacé", "frozen square"], ["chicane", "chicane"], ["losange", "diamond"], ["la croix", "the cross"], ["lac ovale", "oval lake"], ["labyrinthe", "maze"], ["terrain dégagé, sans obstacle", "open ground, no obstacles"], ["6 piliers de glace en cercle", "6 ice pillars in a circle"], ["arène carrée avec 5 piliers", "square arena with 5 pillars"], ["deux cercles de blocs : zigzag", "two rings of blocks: zigzag"], ["arène en losange avec des murs de glace en x", "diamond arena with an X of ice walls"], ["arène en croix : couloirs étroits", "cross arena: narrow corridors"], ["lac ovale avec des courants qui poussent", "oval lake with pushing currents"], ["labyrinthe de murs de glace en serpentin", "serpentine maze of ice walls"], ["vitesse et zone normales", "normal speed and zone"], ["très rapide, zone qui s'effondre, blocs en rafale", "very fast, collapsing zone, ice blocks in bursts"], ["vitesse en montagnes russes, traînées géantes : accroche-toi !", "roller-coaster speed, giant trails: hold on tight!"], ["un chasseur plus rapide : survis ou élimine-les tous", "a faster hunter: survive or eliminate them all"], ["carte", "map"], ["joueurs", "players"], ["joueur", "player"], ["capacité", "ability"], ["adversaires", "opponents"], ["les dés tournent", "rolling the dice"], ["c'est parti", "let's go"], ["bouclier offert", "free shield"], ["bouclier", "shield"], ["nettoyage", "clean-up"], ["saut", "jump"], ["fantôme", "ghost"], ["aimant", "magnet"], ["beaucoup plus rapide pendant 1 s", "much faster for 1 s"], ["invincible pendant 2,5 s", "invincible for 2.5 s"], ["efface toute ta traînée", "erases your whole trail"], ["bond en avant par-dessus les traînées", "leap forward over trails"], ["traverse les traînées pendant 2 s", "pass through trails for 2 s"], ["pose une mine : elle élimine qui la touche", "drop a mine: it eliminates whoever touches it"], ["attire tous les bonus autour de toi", "pulls all bonuses around you"], ["boost rechargé", "boost recharged"], ["tu es le roi de la banquise", "you are the king of the ice"], ["est le roi", "is the king"], ["roi détrôné", "king dethroned"], ["pièces", "coins"], ["pièce", "coin"], ["frôlements", "near misses"], ["frôlement", "near miss"], ["meilleure série", "best streak"], ["série", "streak"], ["tu es le chasseur", "you are the hunter"], ["élimine tout le monde", "eliminate everyone"], ["est le chasseur", "is the hunter"], ["survis", "survive"], ["tu étais le chasseur", "you were the hunter"], ["était le chasseur", "was the hunter"], ["un bloc de glace est tombé", "an ice block fell"], ["bloc de glace", "ice block"], ["est tombé", "fell"], ["s'est croisé", "crossed his own trail"], ["a marché sur une mine", "stepped on a mine"], ["tu as marché sur la mine de", "you stepped on the mine of"], ["a foncé dans la traînée de", "ran into the trail of"], ["tu as foncé dans la traînée de", "you ran into the trail of"], ["tu as touché ta propre traînée", "you hit your own trail"], ["tu es tombé à l'eau : la banquise se rétrécit", "you fell in the water: the ice is shrinking"], ["tu as heurté un bloc de glace", "you hit an ice block"], ["éliminé", "eliminated"], ["victoire", "victory"], ["éliminations", "eliminations"], ["élimination", "elimination"], ["temps", "time"], ["connecté :", "connected:"], ["j'ai compris", "got it"], ["super", "great"], ["récompenses", "rewards"], ["récompense :", "reward:"], ["récompense", "reward"], ["à récupérer", "to claim"], ["récupérer", "claim"], ["récupéré", "claimed"], ["complète des objectifs pour gagner des pièces", "complete goals to earn coins"], ["les défis sont enregistrés sur cet appareil", "challenges are saved on this device"], ["patience", "patience"], ["survis 20 secondes dans une partie", "survive 20 seconds in one game"], ["régularité", "consistency"], ["joue 5 parties", "play 5 games"], ["podium", "podium"], ["termine dans les 3 premiers", "finish in the top 3"], ["élimine 10 joueurs au total", "eliminate 10 players in total"], ["collectionneur", "collector"], ["ramasse 15 bonus sur la glace", "pick up 15 bonuses on the ice"], ["maître des pouvoirs", "power master"], ["utilise 20 capacités", "use 20 abilities"], ["tueur en série", "serial eliminator"], ["élimine 3 joueurs dans la même partie", "eliminate 3 players in the same game"], ["marathon", "marathon"], ["survis 45 secondes dans une partie", "survive 45 seconds in one game"], ["champion", "champion"], ["gagne une partie", "win a game"], ["vétéran", "veteran"], ["joue 25 parties", "play 25 games"], ["dans la foule", "in the crowd"], ["finis dans le top 5 d'une partie à 40 joueurs", "finish in the top 5 of a 40-player game"], ["frôleur", "near-misser"], ["frôle 10 traînées sans les toucher", "near-miss 10 trails without touching them"], ["régicide", "regicide"], ["élimine le roi de la banquise", "eliminate the king of the ice"], ["série folle", "crazy streak"], ["fais un triple : 3 éliminations d'affilée", "get a triple: 3 eliminations in a row"], ["atelier de skins", "skin workshop"], ["pièces disponibles :", "coins available:"], ["les skins sont cosmétiques : ils ne donnent aucun avantage en partie", "skins are cosmetic: they give no advantage in game"], ["soleil", "sun"], ["océan", "ocean"], ["menthe", "mint"], ["violet", "purple"], ["flamme", "flame"], ["équipé", "equipped"], ["équiper", "equip"], ["pas assez de pièces pour ce skin. termine une partie pour en gagner", "not enough coins for this skin. finish a game to earn some"], ["effets sonores", "sound effects"], ["animations réduites", "reduced animations"], ["désactivés", "off"], ["désactivé", "off"], ["activés", "on"], ["activé", "on"], ["tes préférences sont enregistrées sur cet appareil", "your preferences are saved on this device"], ["réinitialiser ma progression", "reset my progress"], ["effacer toute la progression sauvegardée", "erase all saved progress"], ["prochain cadeau dans", "next gift in"], ["cadeau récupéré", "gift claimed"], ["un cadeau t'attend", "a gift is waiting for you"], ["cadeau", "gift"], ["trophées", "trophies"], ["ton rang", "your rank"], ["sur", "of"], ["vict.", "wins"], ["seuls ton pseudo et tes stats sont partagés", "only your nickname and stats are shared"], ["aucun joueur pour le moment", "no players yet"], ["joue une partie pour apparaître dans le classement", "play a game to appear in the leaderboard"], ["impossible de charger le classement pour le moment. vérifie ta connexion et réessaie", "cannot load the leaderboard right now. check your connection and try again"], ["réessayer", "retry"], ["chargement", "loading"], ["pour", "to reach"], ["choisis ton profil pour retrouver ta progression", "choose your profile to get your progress back"], ["actif", "active"], ["sûr", "sure"], ["modifier mon profil", "edit my profile"], ["nouveau compte", "new account"], ["retour", "back"], ["pseudo changé", "nickname changed"], ["pseudo", "nickname"], ["2 à 10 caractères", "2 to 10 characters"], ["code secret", "secret code"], ["facultatif", "optional"], ["4 chiffres", "4 digits"], ["créer", "create"], ["les comptes sont enregistrés sur cet appareil", "accounts are saved on this device"], ["mon profil", "my profile"], ["changer la photo", "change photo"], ["ajouter la photo", "add photo"], ["retirer la photo", "remove photo"], ["couleur", "color"], ["laisser vide = inchangé", "leave empty = unchanged"], ["enregistrer", "save"], ["entre ton code secret", "enter your secret code"], ["code incorrect", "wrong code"], ["code supprimé", "code removed"], ["profil enregistré", "profile saved"], ["pseudo trop court (2 caractères min.)", "nickname too short (min. 2 characters)"], ["ce pseudo existe déjà", "this nickname already exists"], ["le code doit faire 4 chiffres", "the code must be 4 digits"], ["entre une adresse gmail valide", "enter a valid Gmail address"], ["changer de pseudo coûte", "changing your nickname costs"], ["tu en as", "you have"], ["changer", "change"], ["photo non supportée", "unsupported photo"], ["impossible de charger la photo", "cannot load the photo"], ["image illisible (essaie une capture d'écran ou un jpg)", "unreadable image (try a screenshot or a JPG)"], ["image illisible", "unreadable image"], ["accélérateur", "booster"], ["glisse", "slip"], ["dépassement", "overtake"], ["dépassé", "overtaken"], ["percussions", "rams"], ["percussion", "ram"], ["t'a percuté", "rammed you"], ["fonce sur les flèches", "hit the arrows"], ["évite les flaques", "avoid the puddles"], ["nouveau record", "new record"], ["gagne une course", "win a race"], ["finis une course en moins de 40 s", "finish a race in under 40 s"], ["percute 5 adversaires en turbo", "ram 5 opponents while boosting"], ["pilote", "driver"], ["bélier", "battering ram"], ["chrono", "timer"],["offres du jour","daily deals"],["prochain dans","next in"],["coffres","chests"],["petit coffre","small chest"],["grand coffre","big chest"],["méga coffre","mega chest"],["coffre légendaire","legendary chest"],["gratuit","free"],["il te manque","you need"],["nouveau","new"],["ouverture","opening"],["acheté et équipé","bought and equipped"],["chaque coffre te donne 1 objet au hasard que tu n'as pas encore","each chest gives 1 random item you don't own yet"],["tu possèdes déjà tout","you already own everything"],["explosions","explosions"],["auras","auras"],["rare","rare"]];
+const TR_LIST=[["commun","common"],["épique","epic"],["légendaire","legendary"],["pas mal","not bad"],["beau tirage","nice draw"],["ça chauffe","it's heating up"],["arrête chaque rouleau sur ce que tu veux","stop each reel on whatever you want"],["c'est parti","let's go"],["sillage", "slipstream"], ["longue course sinueuse", "long winding race"], ["longue course avec des virages", "long race with plenty of turns"], ["ramasse les turbos", "collect the turbos"], ["ramasse les", "grab the"], ["pour accélérer", "to speed up"], ["reste sur la piste", "stay on the track"], ["retour piste", "back on track"], ["course terminée", "race finished"], ["turbos", "turbos"], ["course", "race"], ["circuit", "track"], ["retourne vers le centre", "return to the center"], ["tu es l'orbe à", "you are the orb with a"], ["contour doré", "golden outline"], ["toi", "you"], ["niv.", "Lv."], ["niveau", "level"], ["débloqué", "unlocked"], ["parties", "games"], ["partie énorme", "huge game"], ["partie", "game"], ["défis", "challenges"], ["classement mondial", "world leaderboard"], ["classement", "leaderboard"], ["rejouer", "play again"], ["reprends quand tu es prêt", "resume when you're ready"], ["reprendre", "resume"], ["tirage au sort", "random draw"], ["pouvoir spécial", "special power"], ["comptes", "accounts"], ["compte", "account"], ["cadeau quotidien", "daily gift"], ["aide", "help"], ["jouer", "play"], ["voir les ligues", "view leagues"], ["fermer", "close"], ["supprimer le code", "remove code"], ["supprimer", "delete"], ["classique", "classic"], ["rapide", "fast"], ["folie", "crazy"], ["chasseur", "hunter"], ["banquise", "ice floe"], ["piliers", "pillars"], ["carré glacé", "frozen square"], ["chicane", "chicane"], ["losange", "diamond"], ["la croix", "the cross"], ["lac ovale", "oval lake"], ["labyrinthe", "maze"], ["terrain dégagé, sans obstacle", "open ground, no obstacles"], ["6 piliers de glace en cercle", "6 ice pillars in a circle"], ["arène carrée avec 5 piliers", "square arena with 5 pillars"], ["deux cercles de blocs : zigzag", "two rings of blocks: zigzag"], ["arène en losange avec des murs de glace en x", "diamond arena with an X of ice walls"], ["arène en croix : couloirs étroits", "cross arena: narrow corridors"], ["lac ovale avec des courants qui poussent", "oval lake with pushing currents"], ["labyrinthe de murs de glace en serpentin", "serpentine maze of ice walls"], ["vitesse et zone normales", "normal speed and zone"], ["très rapide, zone qui s'effondre, blocs en rafale", "very fast, collapsing zone, ice blocks in bursts"], ["vitesse en montagnes russes, traînées géantes : accroche-toi !", "roller-coaster speed, giant trails: hold on tight!"], ["un chasseur plus rapide : survis ou élimine-les tous", "a faster hunter: survive or eliminate them all"], ["carte", "map"], ["joueurs", "players"], ["joueur", "player"], ["capacité", "ability"], ["adversaires", "opponents"], ["les dés tournent", "rolling the dice"], ["c'est parti", "let's go"], ["bouclier offert", "free shield"], ["bouclier", "shield"], ["nettoyage", "clean-up"], ["saut", "jump"], ["fantôme", "ghost"], ["aimant", "magnet"], ["beaucoup plus rapide pendant 1 s", "much faster for 1 s"], ["invincible pendant 2,5 s", "invincible for 2.5 s"], ["efface toute ta traînée", "erases your whole trail"], ["bond en avant par-dessus les traînées", "leap forward over trails"], ["traverse les traînées pendant 2 s", "pass through trails for 2 s"], ["pose une mine : elle élimine qui la touche", "drop a mine: it eliminates whoever touches it"], ["attire tous les bonus autour de toi", "pulls all bonuses around you"], ["boost rechargé", "boost recharged"], ["tu es le roi de la banquise", "you are the king of the ice"], ["est le roi", "is the king"], ["roi détrôné", "king dethroned"], ["pièces", "coins"], ["pièce", "coin"], ["frôlements", "near misses"], ["frôlement", "near miss"], ["meilleure série", "best streak"], ["série", "streak"], ["tu es le chasseur", "you are the hunter"], ["élimine tout le monde", "eliminate everyone"], ["est le chasseur", "is the hunter"], ["survis", "survive"], ["tu étais le chasseur", "you were the hunter"], ["était le chasseur", "was the hunter"], ["un bloc de glace est tombé", "an ice block fell"], ["bloc de glace", "ice block"], ["est tombé", "fell"], ["s'est croisé", "crossed his own trail"], ["a marché sur une mine", "stepped on a mine"], ["tu as marché sur la mine de", "you stepped on the mine of"], ["a foncé dans la traînée de", "ran into the trail of"], ["tu as foncé dans la traînée de", "you ran into the trail of"], ["tu as touché ta propre traînée", "you hit your own trail"], ["tu es tombé à l'eau : la banquise se rétrécit", "you fell in the water: the ice is shrinking"], ["tu as heurté un bloc de glace", "you hit an ice block"], ["éliminé", "eliminated"], ["victoire", "victory"], ["éliminations", "eliminations"], ["élimination", "elimination"], ["temps", "time"], ["connecté :", "connected:"], ["j'ai compris", "got it"], ["super", "great"], ["récompenses", "rewards"], ["récompense :", "reward:"], ["récompense", "reward"], ["à récupérer", "to claim"], ["récupérer", "claim"], ["récupéré", "claimed"], ["complète des objectifs pour gagner des pièces", "complete goals to earn coins"], ["les défis sont enregistrés sur cet appareil", "challenges are saved on this device"], ["patience", "patience"], ["survis 20 secondes dans une partie", "survive 20 seconds in one game"], ["régularité", "consistency"], ["joue 5 parties", "play 5 games"], ["podium", "podium"], ["termine dans les 3 premiers", "finish in the top 3"], ["élimine 10 joueurs au total", "eliminate 10 players in total"], ["collectionneur", "collector"], ["ramasse 15 bonus sur la glace", "pick up 15 bonuses on the ice"], ["maître des pouvoirs", "power master"], ["utilise 20 capacités", "use 20 abilities"], ["tueur en série", "serial eliminator"], ["élimine 3 joueurs dans la même partie", "eliminate 3 players in the same game"], ["marathon", "marathon"], ["survis 45 secondes dans une partie", "survive 45 seconds in one game"], ["champion", "champion"], ["gagne une partie", "win a game"], ["vétéran", "veteran"], ["joue 25 parties", "play 25 games"], ["dans la foule", "in the crowd"], ["finis dans le top 5 d'une partie à 40 joueurs", "finish in the top 5 of a 40-player game"], ["frôleur", "near-misser"], ["frôle 10 traînées sans les toucher", "near-miss 10 trails without touching them"], ["régicide", "regicide"], ["élimine le roi de la banquise", "eliminate the king of the ice"], ["série folle", "crazy streak"], ["fais un triple : 3 éliminations d'affilée", "get a triple: 3 eliminations in a row"], ["atelier de skins", "skin workshop"], ["pièces disponibles :", "coins available:"], ["les skins sont cosmétiques : ils ne donnent aucun avantage en partie", "skins are cosmetic: they give no advantage in game"], ["soleil", "sun"], ["océan", "ocean"], ["menthe", "mint"], ["violet", "purple"], ["flamme", "flame"], ["équipé", "equipped"], ["équiper", "equip"], ["pas assez de pièces pour ce skin. termine une partie pour en gagner", "not enough coins for this skin. finish a game to earn some"], ["effets sonores", "sound effects"], ["animations réduites", "reduced animations"], ["désactivés", "off"], ["désactivé", "off"], ["activés", "on"], ["activé", "on"], ["tes préférences sont enregistrées sur cet appareil", "your preferences are saved on this device"], ["réinitialiser ma progression", "reset my progress"], ["effacer toute la progression sauvegardée", "erase all saved progress"], ["prochain cadeau dans", "next gift in"], ["cadeau récupéré", "gift claimed"], ["un cadeau t'attend", "a gift is waiting for you"], ["cadeau", "gift"], ["trophées", "trophies"], ["ton rang", "your rank"], ["sur", "of"], ["vict.", "wins"], ["seuls ton pseudo et tes stats sont partagés", "only your nickname and stats are shared"], ["aucun joueur pour le moment", "no players yet"], ["joue une partie pour apparaître dans le classement", "play a game to appear in the leaderboard"], ["impossible de charger le classement pour le moment. vérifie ta connexion et réessaie", "cannot load the leaderboard right now. check your connection and try again"], ["réessayer", "retry"], ["chargement", "loading"], ["pour", "to reach"], ["choisis ton profil pour retrouver ta progression", "choose your profile to get your progress back"], ["actif", "active"], ["sûr", "sure"], ["modifier mon profil", "edit my profile"], ["nouveau compte", "new account"], ["retour", "back"], ["pseudo changé", "nickname changed"], ["pseudo", "nickname"], ["2 à 10 caractères", "2 to 10 characters"], ["code secret", "secret code"], ["facultatif", "optional"], ["4 chiffres", "4 digits"], ["créer", "create"], ["les comptes sont enregistrés sur cet appareil", "accounts are saved on this device"], ["mon profil", "my profile"], ["changer la photo", "change photo"], ["ajouter la photo", "add photo"], ["retirer la photo", "remove photo"], ["couleur", "color"], ["laisser vide = inchangé", "leave empty = unchanged"], ["enregistrer", "save"], ["entre ton code secret", "enter your secret code"], ["code incorrect", "wrong code"], ["code supprimé", "code removed"], ["profil enregistré", "profile saved"], ["pseudo trop court (2 caractères min.)", "nickname too short (min. 2 characters)"], ["ce pseudo existe déjà", "this nickname already exists"], ["le code doit faire 4 chiffres", "the code must be 4 digits"], ["entre une adresse gmail valide", "enter a valid Gmail address"], ["changer de pseudo coûte", "changing your nickname costs"], ["tu en as", "you have"], ["changer", "change"], ["photo non supportée", "unsupported photo"], ["impossible de charger la photo", "cannot load the photo"], ["image illisible (essaie une capture d'écran ou un jpg)", "unreadable image (try a screenshot or a JPG)"], ["image illisible", "unreadable image"], ["accélérateur", "booster"], ["glisse", "slip"], ["dépassement", "overtake"], ["dépassé", "overtaken"], ["percussions", "rams"], ["percussion", "ram"], ["t'a percuté", "rammed you"], ["fonce sur les flèches", "hit the arrows"], ["évite les flaques", "avoid the puddles"], ["nouveau record", "new record"], ["gagne une course", "win a race"], ["finis une course en moins de 40 s", "finish a race in under 40 s"], ["percute 5 adversaires en turbo", "ram 5 opponents while boosting"], ["pilote", "driver"], ["bélier", "battering ram"], ["chrono", "timer"],["offres du jour","daily deals"],["prochain dans","next in"],["coffres","chests"],["petit coffre","small chest"],["grand coffre","big chest"],["méga coffre","mega chest"],["coffre légendaire","legendary chest"],["gratuit","free"],["il te manque","you need"],["nouveau","new"],["ouverture","opening"],["acheté et équipé","bought and equipped"],["chaque coffre te donne 1 objet au hasard que tu n'as pas encore","each chest gives 1 random item you don't own yet"],["tu possèdes déjà tout","you already own everything"],["explosions","explosions"],["auras","auras"],["rare","rare"],["patate","hot potato"],["météores","meteors"],["tempête","storm"],["éjecte les autres hors de la glace","knock the others off the ice"],["esquive les météorites","dodge the meteorites"],["tu as la bombe","you have the bomb"],["hexagone","hexagon"],["îlots","islets"],["moulin","windmill"],["ruche","hive"],["quatre coins","four corners"],["tourbillon","whirlpool"],["tapis roulant","conveyor belt"],["forêt de glace","ice forest"]];
 TR_LIST.push(["pluie de gemmes","gem rain"],["vitesse max","max speed"],["combo max","max combo"],["vitesse","speed"],["gemmes","gems"],["pluie de météorites","meteor shower"],["tempête de vent","wind storm"],["tout est cosmétique : aucun avantage en partie.","everything is cosmetic: no in-game advantage."],["aucune","none"],["halo doré","golden halo"],["anneau néon","neon ring"],["flammes","flames"],["cristaux de glace","ice crystals"],["éclipse","eclipse"],["confettis","confetti"],["feu d'artifice","fireworks"],["classique","classic"],["arc-en-ciel","rainbow"],["diamant","diamond"],["obsidienne","obsidian"],["rubis","ruby"],["or pur","pure gold"],["galaxie","galaxy"],["mythique","mythic"],["coffre gratuit","free chest"],["regarde une pub","watch an ad"],["aujourd'hui","today"],["reviens demain","come back tomorrow"],["pub interrompue : pas de coffre","ad interrupted: no chest"],["récupérer","claim"]);let trRe=null,trMap=null;const trCache=new Map(),trDone=new WeakMap();
 TR_LIST.push(["cochon","pig"],["écureuil","squirrel"],["requin","shark"],["grenouille","frog"],["sorcière","witch"],["renne","reindeer"],["roi","king"],["père noël","santa"],["licorne","unicorn"],["bonhomme de neige","snowman"],["araignée","spider"],["aigle","eagle"],["oncle sam","uncle sam"]);
 function trInit(){
@@ -1402,6 +1402,7 @@ const SHP={
  square:{ext:.92,n:(x,y)=>Math.max(Math.abs(x),Math.abs(y))/.92},
  diamond:{ext:1.3,n:(x,y)=>(Math.abs(x)+Math.abs(y))/1.3},
  ellipse:{ext:1.3,n:(x,y)=>Math.hypot(x/1.3,y/.77)},
+ hex:{ext:1.12,n:(x,y)=>Math.max(Math.abs(x)*.866+Math.abs(y)*.5,Math.abs(y))/(.866*1.12)},
  cross:{ext:1.15,n:(x,y)=>{x=Math.abs(x);y=Math.abs(y);return Math.min(Math.max(x/1.15,y/.48),Math.max(x/.48,y/1.15))}}};
 let NR=SHP.circle.n,EXT=1;
 function shapePath(c,k,R,ox=0,oy=0){
@@ -1409,6 +1410,7 @@ function shapePath(c,k,R,ox=0,oy=0){
   if(k==='ellipse')c.ellipse(ox,oy,R*1.3,R*.77,0,0,TAU);
   else if(k==='square'){const h=R*.92;c.roundRect(ox-h,oy-h,2*h,2*h,10)}
   else if(k==='diamond'){const h=R*1.3;c.moveTo(ox,oy-h);c.lineTo(ox+h,oy);c.lineTo(ox,oy+h);c.lineTo(ox-h,oy);c.closePath()}
+  else if(k==='hex'){const h=R*1.12;for(let i=0;i<6;i++){const a=i*Math.PI/3;i?c.lineTo(ox+Math.cos(a)*h,oy+Math.sin(a)*h):c.moveTo(ox+h,oy)}c.closePath()}
   else if(k==='cross'){const a=R*1.15,b=R*.48,q=[[b,-a],[b,-b],[a,-b],[a,b],[b,b],[b,a],[-b,a],[-b,b],[-a,b],[-a,-b],[-b,-b],[-b,-a]];q.forEach((v,n)=>n?c.lineTo(ox+v[0],oy+v[1]):c.moveTo(ox+v[0],oy+v[1]));c.closePath()}
   else c.arc(ox,oy,R,0,TAU);
 }
@@ -1428,7 +1430,15 @@ const MAPS=[
  {n:'Losange',l:2,sh:'diamond',o:[bar(-170,-170,170,170,22),bar(-170,170,170,-170,22),{x:0,y:-470,r:34},{x:0,y:470,r:34},{x:-470,y:0,r:34},{x:470,y:0,r:34}]},
  {n:'La Croix',l:2,sh:'cross',o:[{x:0,y:0,r:54},{x:430,y:0,r:30},{x:-430,y:0,r:30},{x:0,y:430,r:30},{x:0,y:-430,r:30}]},
  {n:'Lac ovale',l:3,sh:'ellipse',o:[bar(-420,-190,-140,-190,26),bar(140,190,420,190,26),bar(-70,-50,70,-50,24),bar(-70,50,70,50,24)],cur:[{x:-430,y:60,r:170,ax:0,ay:75},{x:430,y:-60,r:170,ax:0,ay:-75}]},
- {n:'Labyrinthe',l:3,sh:'square',o:[bar(-400,-300,150,-300,22),bar(400,-120,-150,-120,22),bar(-400,120,150,120,22),bar(400,300,-150,300,22)],cur:[{x:0,y:0,r:90,ax:70,ay:0}]}];
+ {n:'Labyrinthe',l:3,sh:'square',o:[bar(-400,-300,150,-300,22),bar(400,-120,-150,-120,22),bar(-400,120,150,120,22),bar(400,300,-150,300,22)],cur:[{x:0,y:0,r:90,ax:70,ay:0}]},
+ {n:'Hexagone',l:1,sh:'hex',o:[{x:0,y:0,r:44}].concat(ring(6,400,30,.5236))},
+ {n:'Îlots',l:1,sh:'circle',o:ring(8,480,24).concat(ring(4,230,30,.785),[{x:0,y:0,r:34}])},
+ {n:'Moulin',l:2,sh:'circle',o:Array.from({length:4},(_,i)=>{const a=i*TAU/4,c=Math.cos(a),s=Math.sin(a),f=(x,y)=>[x*c-y*s,x*s+y*c],u=f(80,-70),v=f(420,-70);return bar(u[0],u[1],v[0],v[1],22)})},
+ {n:'Ruche',l:2,sh:'hex',o:ring(6,250,34,.5236).concat(ring(6,520,28))},
+ {n:'Quatre coins',l:2,sh:'square',o:[[1,1],[1,-1],[-1,1],[-1,-1]].reduce((r,q)=>r.concat([bar(q[0]*440,q[1]*440,q[0]*440,q[1]*190,22),bar(q[0]*440,q[1]*440,q[0]*190,q[1]*440,22)]),[{x:0,y:0,r:36}])},
+ {n:'Tourbillon',l:3,sh:'circle',o:[{x:0,y:0,r:56}],cur:Array.from({length:6},(_,i)=>{const a=i*TAU/6;return{x:Math.cos(a)*400,y:Math.sin(a)*400,r:190,ax:-Math.sin(a)*80,ay:Math.cos(a)*80}})},
+ {n:'Tapis roulant',l:3,sh:'square',o:[bar(-250,0,250,0,24)],cur:[{x:0,y:-330,r:230,ax:95,ay:0},{x:0,y:330,r:230,ax:-95,ay:0}]},
+ {n:'Forêt de glace',l:3,sh:'hex',o:ring(6,200,28,.5236).concat(ring(12,420,22,.26),ring(6,590,26,.5236))}];
 const LG=LANG==='en'?['BRONZE','SILVER','GOLD','PLATINUM','EMERALD','SAPPHIRE','RUBY','DIAMOND','LEGEND']:['BRONZE','ARGENT','OR','PLATINE','ÉMERAUDE','SAPHIR','RUBIS','DIAMANT','LÉGENDE'],RM=['III','II','I'];
 // Seuils de trophées : Bronze 0 → Légende 10 000
 const LGMIN=[0,400,1000,1700,2600,3800,5300,7200,10000];
@@ -1451,10 +1461,11 @@ let P=[],t=0,zoneR=700,state='menu',map=MAPS[0],feed=[],fx=[],cam={x:0,y:0},last
 let gameMode='classic';try{gameMode=LS.getItem('dontstop_mode')||'classic';if(gameMode==='survival')gameMode='crazy'}catch(e){}
 let NP=8,abil={k:'boost',i:'⚡',n:'BOOST',cd:6};
 let mets=[],craters=[],wind={t:0,x:0,y:0},evT=0,metLeft=0,metT=0;
+let bombH=-1,bombT=0,bombCool=0,modeT=0,windT=0;
 let dtG=.016,spdLvl=0,SPDM=1,zbX=0,spk=[],gemT=1,rainT=22,gcomb=0,gct=-99;
 let hitStop=0,zoomP=0,zb=0,flashA=0,boostTime=0,boostCooldown=0,toastTimer=0,audioCtx=null,items=[],itT=2;
 const SPEEDK=1.3,TURNK=1.25; // vitesse de base des joueurs (+30 %) et agilité adaptée
-const MODECFG={hunt:{speed:1.05,zone:5,trail:1},classic:{speed:1,zone:5,trail:1},rush:{speed:1.6,zone:13,trail:.55},crazy:{get speed(){return 1.05+.5*Math.sin(t*1.7)},zone:4,trail:1.7},race:{speed:1.25,zone:0,trail:.6}};
+const MODECFG={hunt:{speed:1.05,zone:5,trail:1},classic:{speed:1,zone:5,trail:1},rush:{speed:1.6,zone:13,trail:.55},crazy:{get speed(){return 1.05+.5*Math.sin(t*1.7)},zone:4,trail:1.7},race:{speed:1.25,zone:0,trail:.6},bomb:{speed:1.05,zone:5,trail:1},sumo:{speed:1.1,zone:7,trail:1},meteor:{speed:1.1,zone:3,trail:.8},storm:{speed:1.05,zone:4,trail:1}};
 function toast(msg){buzz(18);const el=$('toast');el.textContent=msg;el.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.style.display='none',1600)}
 function sfx(kind){if(LS.getItem('dontstop_sound')==='off')return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.type='sine';o.frequency.value=kind==='boost'?620:kind==='win'?880:440;g.gain.setValueAtTime(.055,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+.16);o.start();o.stop(audioCtx.currentTime+.17)}catch(e){}}
 
@@ -1471,7 +1482,7 @@ function menu(){
 }
 
 function cdTick(n){const e=$('cdn');e.textContent=n;e.style.animation='none';void e.offsetWidth;e.style.animation='';buzz(14)}
-function huntMsg(){if(RACE){toast('🏁 Ramasse les ⚡ et fonce sur les flèches orange !');return}if(gameMode==='hunt'&&hunter>=0)toast(hunter===0?'Tu es le CHASSEUR : élimine tout le monde !':NAMES[hunter]+' est le chasseur : survis !')}
+function huntMsg(){if(RACE){toast('🏁 Ramasse les ⚡ et fonce sur les flèches orange !');return}if(gameMode==='hunt'&&hunter>=0)toast(hunter===0?'Tu es le CHASSEUR : élimine tout le monde !':NAMES[hunter]+' est le chasseur : survis !');if(gameMode==='sumo')toast('🥊 Éjecte les autres hors de la glace !');else if(gameMode==='meteor')toast('☄️ Esquive les météorites !');else if(gameMode==='storm')toast('🌪️ Le vent change de direction : accroche-toi !')}
 function newGame(){
   RACE=gameMode==='race';map=MAPS[S.map];const SH=SHP[map.sh||'circle'];NR=SH.n;EXT=SH.ext;
   if(RACE){TRK=TRK||buildTrack();NR=trkNear;EXT=1}
@@ -1489,10 +1500,11 @@ function newGame(){
   pickBotSkins();
   if(RACE)raceGrid();
   hunter=-1;if(gameMode==='hunt'){hunter=Math.random()<.3?0:1+(Math.random()*(NP-1)|0);P[hunter].hu=true;if(hunter)P[hunter].skill=1}
+  bombH=-1;bombT=0;bombCool=0;modeT=0;windT=0;
   items=[];itT=2;t=0;zoneR=ZR0;feed=[];fx=[];dyT=0;boostTime=0;boostCooldown=0;cam.x=P[0].x;cam.y=P[0].y;
   if(RACE){zoneR=RW;items=raceItems();rItems=[];nextFall=1e9;nfin=0;rPads=racePads()}else rPads=[];
   $('menu').classList.remove('on');$('over').classList.remove('on');
-  state='count';let n=3;$('cd').style.display='flex';cdTick(n);
+  state='count';let n=3;$('cd').style.display='flex';try{const md=MODED[gameMode]||MODED.classic;$('cdm').textContent=tx(md[0]+' '+md[1])}catch(e){}cdTick(n);
   clearInterval(ivC);
   ivC=setInterval(()=>{n--;if(n>0)cdTick(n);else{clearInterval(ivC);$('cd').style.display='none';state='play';last=performance.now();huntMsg()}},700);
 }
@@ -1553,11 +1565,12 @@ function ai(p,dt){
   // objectif : bonus proche, sinon couper la route d'un adversaire, sinon rester au centre quand la zone rétrécit
   let gA=null,gW=1,bd=1e9;
   for(const it of items){const d=Math.hypot(it.x-p.x,it.y-p.y);if(d<240&&d<bd&&NR(it.x,it.y)<zoneR-70){bd=d;gA=Math.atan2(it.y-p.y,it.x-p.x)}}
-  if(gA===null&&(p.skill>.915||p.hu||p.chase)){
+  if(gA===null&&(p.skill>.915||p.hu||p.chase||gameMode==='sumo')){
     let bq=null,bdq=p.hu?900:(p.chase?460:340);
     for(const q of P){if(q===p||!q.alive)continue;const d=Math.hypot(q.x-p.x,q.y-p.y);if(q===p.chase&&d<460){bq=q;bdq=d;break}if(d<bdq){bdq=d;bq=q}}
     if(bq){p.chase=bq;const lead=Math.max(.5,Math.min(1.2,bdq/sp)*1.2);gA=Math.atan2(bq.y+Math.sin(bq.a)*sp*lead-p.y,bq.x+Math.cos(bq.a)*sp*lead-p.x);gW=p.hu?1.2:.95}else p.chase=null
   }
+  if(gameMode==='bomb'&&bombH>=0&&p.id!==bombH&&P[bombH].alive){const b=P[bombH],dx=p.x-b.x,dy=p.y-b.y;if(dx*dx+dy*dy<90000){gA=Math.atan2(dy,dx);gW=1.1}}
   const toC=Math.atan2(-p.y,-p.x),dc=NR(p.x,p.y),edge=dc>zoneR-look*1.4||(t>8&&dc>zoneR*.72);
   let best=p.a,bc=1e9,allBad=true,centerClear=look;
   for(let k=0;k<13;k++){
@@ -1721,7 +1734,7 @@ function update(dt){
     const lab=cdv?Math.ceil(boostCooldown):'';if(lab!==BBl){BBl=lab;$('boostLabel').textContent=lab}
     const pr=abil.cd?Math.round(360*boostCooldown/abil.cd):0;if(pr!==BBp){BBp=pr;bb.style.setProperty('--p',pr+'deg')}}}
   // blocs de glace qui tombent
-  nextFall-=dt;if(t>12&&nextFall<=0&&falls.length<2&&obs.length<map.o.length+9){nextFall=gameMode==='rush'?2.8:gameMode==='crazy'?4:7;spawnFall()}
+  nextFall-=dt;if(t>12&&nextFall<=0&&falls.length<2&&obs.length<map.o.length+9){nextFall=gameMode==='rush'?2.8:(gameMode==='crazy'||gameMode==='storm')?4:7;spawnFall()}
   for(const f of falls){f.t-=dt;if(f.t<=0){obs.push({x:f.x,y:f.y,r:f.r,f:1});fx.push({x:f.x,y:f.y,t:performance.now(),c:'#8fd3ff'});shake=Math.max(shake,.25);say('Un bloc de glace est tombé !')}}
   falls=falls.filter(f=>f.t>0);
   if(wind.t>0)wind.t-=dt;
@@ -1742,7 +1755,7 @@ function update(dt){
     for(const c of curs)if((p.x-c.x)**2+(p.y-c.y)**2<c.r*c.r){p.x+=c.ax*dt;p.y+=c.ay*dt}
     if(wind.t>0){p.x+=wind.x*dt;p.y+=wind.y*dt}
     const l=p.trail[p.trail.length-1];
-    if(!l||(p.x-l.x)**2+(p.y-l.y)**2>=9)p.trail.push({x:p.x,y:p.y,t,s:p.ts=(p.ts|0)+1});
+    if(gameMode!=='sumo'&&(!l||(p.x-l.x)**2+(p.y-l.y)**2>=9))p.trail.push({x:p.x,y:p.y,t,s:p.ts=(p.ts|0)+1});
     while(p.trail.length&&t-p.trail[0].t>life)p.trail.shift();
   }
   if(RACE){for(const p of P){p.dr=0;if(!p.alive)continue;const ux=Math.cos(p.a),uy=Math.sin(p.a);for(const q of P){if(q===p||!q.alive)continue;const dx=q.x-p.x,dy=q.y-p.y,f=dx*ux+dy*uy;if(f>20&&f<115&&Math.abs(-dx*uy+dy*ux)<26){p.dr=1;break}}}
@@ -1759,6 +1772,7 @@ function update(dt){
   for(const p of P){if(!p.alive||!(p.mg>0))continue;for(const it of items){const dx=p.x-it.x,dy=p.y-it.y,dd=Math.hypot(dx,dy);if(dd<300&&dd>1){const st=Math.min(dd,420*dt);it.x+=dx/dd*st;it.y+=dy/dd*st}}}
   for(const p of P){if(!p.alive)continue;for(let i=items.length-1;i>=0;i--){const it=items[i];if(Math.hypot(p.x-it.x,p.y-it.y)<(RACE?34:28)+(it.k==='G'?8:0)){items.splice(i,1);if(it.k==='G'){if(!p.id)gemGet(it);else sparkAt(it.x,it.y,'#7df3ff',4,120,.4);continue}if(RACE)rItems.push({x:it.x,y:it.y,k:it.k,t:11});if(it.k==='S')p.sh=Math.max(p.sh,2.5);else if(it.k==='R'){p.rb=Math.min(5,(p.rb||0)+(RACE?1.3:2.2));p.slow=0}else if(!p.id)boostCooldown=0;if(!p.id){S.items=(S.items||0)+1;if(it.k==='R')gm.turbo=(gm.turbo||0)+1;toast(it.k==='S'?'🛡️ Bouclier !':it.k==='R'?'⚡ TURBO !':'⚡ Boost rechargé !');sfx('boost')}}}}
   if(!RACE)tgBuild();
+  modeStep(dt,dying);
   if(RACE){for(const p of P)if(p.alive)raceCollide(p)}else for(const p of P)if(p.alive&&(p.sh<=0||RACE)){let h=hit(p.x,p.y,p,40,-4);if(RACE&&p.sh>0&&h===-3)h=-1;if(h===-1&&NR(p.x,p.y)>zoneR-(RACE?2:12))h=-2;if(h!==-1&&!(p.gh>0&&h>=0)&&!dying.some(x=>x[0]===p))dying.push([p,h])}
   // mines : elles éliminent tout joueur (sauf leur propriétaire) qui les touche
   for(const mn of mines){if(mn.a>0)continue;for(const p of P){if(!p.alive||p.id===mn.o||p.sh>0||dying.some(x=>x[0]===p))continue;if((p.x-mn.x)**2+(p.y-mn.y)**2<576){dying.push([p,-10-mn.o]);mn.t=0;fx.push({x:mn.x,y:mn.y,t:performance.now(),c:'#ff5a36'})}}}
@@ -1770,11 +1784,12 @@ function update(dt){
     p.alive=false;p.rank=cnt;p.time=t;p.trail=[];
     fx.push({x:p.x,y:p.y,t:performance.now(),c:COL[p.id]});
     let k=-1;
-    if(h===-99){say(nm+' ▸ météorite');p.cause=p.id?'Tu as été frappé par une météorite':nm+' a été frappé par une météorite'}else if(h<=-10){k=-10-h;P[k].kills++;say(NAMES[k]+' ▸ '+nm+' (mine)');p.cause=p.id?nm+' a marché sur une mine':'Tu as marché sur la mine de '+NAMES[k]}
+    if(h===-77){say('💥 '+nm+' ▸ BOUM !');p.cause=p.id?nm+' a explosé avec la bombe 💣':'La bombe a explosé sur toi 💣'}else if(h===-99){say(nm+' ▸ météorite');p.cause=p.id?'Tu as été frappé par une météorite':nm+' a été frappé par une météorite'}else if(h<=-10){k=-10-h;P[k].kills++;say(NAMES[k]+' ▸ '+nm+' (mine)');p.cause=p.id?nm+' a marché sur une mine':'Tu as marché sur la mine de '+NAMES[k]}
     else if(h>=0&&h!==p.id){k=h;P[h].kills++;say(NAMES[h]+' ▸ '+nm);p.cause=p.id?nm+' a foncé dans la traînée de '+NAMES[h]:'Tu as foncé dans la traînée de '+NAMES[h]}
     else if(h===p.id){say(nm+' s\'est croisé');p.cause='Tu as touché ta propre traînée'}
     else if(h===-2){say(nm+' est tombé 🌊');p.cause='Tu es tombé à l\'eau : la banquise se rétrécit 🌊'}
     else{say(nm+' ▸ bloc de glace');p.cause='Tu as heurté un bloc de glace'}
+    if(gameMode==='sumo'&&k<0&&(h===-2||h===-3)&&p.lh>=0&&t-p.lht<3&&P[p.lh].alive&&p.lh!==p.id){k=p.lh;P[k].kills++;say(NAMES[k]+' ▸ '+nm+' (éjecté)');p.cause=p.id?nm+' a été éjecté par '+NAMES[k]:'Tu as été éjecté par '+NAMES[k]}
     if(k>=0&&k!==p.id)onKill(k,p);
     if(!p.id){shake=.5;buzz([90,40,140]);deathFx(p)}
   }
@@ -1789,15 +1804,80 @@ function update(dt){
   if(state==='play'){
     if(RACE){if(P[0].fin||t>170||(gm.dl&&t>gm.dl))finish()}
     else if(!P[0].alive){state='dying';dyT=1.2}
-    else if(P.filter(q=>q.alive).length<=1||(gameMode==='hunt'&&hunter>=0&&!P[hunter].alive))finish();
+    else if(gameEnded())finish();
   }
 }
 function rankRows(){const sr=[...P].sort((a,b)=>a.rank-b.rank);if(NP<=10)return sr;const top=sr.slice(0,6);return sr.indexOf(P[0])>5?top.concat([P[0]]):top}
+/* ---------- NOUVEAUX MODES : Patate chaude, Sumo, Météores, Tempête ---------- */
+function bombTag(p){return p.hu?(gameMode==='bomb'?'💣 '+Math.max(0,bombT).toFixed(1)+' ':'🎯 '):''}
+function pickBomb(){
+  if(bombH>=0&&P[bombH])P[bombH].hu=false;
+  const al=P.filter(q=>q.alive);if(!al.length){bombH=-1;return}
+  const q=al[Math.random()*al.length|0];q.hu=true;bombH=q.id;bombT=7;bombCool=1.2;
+  say('💣 '+NAMES[q.id]+' a la bombe !');
+  if(q.id===0&&state!=='over'){toast('💣 Tu as la bombe ! Touche quelqu\'un pour la passer !');buzz([30,30,60])}}
+function passBomb(q){
+  const b=P[bombH];b.hu=false;q.hu=true;bombH=q.id;bombCool=1.2;
+  say('💣 '+NAMES[b.id]+' ▸ '+NAMES[q.id]);
+  if(state!=='over'){pop(q.x,q.y-44,'💣');shake=Math.max(shake,.25);slotTone(520,.08,'square',.04);
+    if(q.id===0){toast('💣 Tu as la bombe ! Passe-la vite !');buzz([30,30,60])}else if(b.id===0)toast('😮‍💨 Bombe passée !')}}
+function modeStep(dt,dying){
+  if(RACE)return;
+  if(gameMode==='bomb'){
+    const b=bombH>=0?P[bombH]:null;
+    if(!b||!b.alive)pickBomb();
+    else{
+      bombT-=dt;bombCool-=dt;
+      if(bombCool<=0)for(const q of P){if(q===b||!q.alive)continue;const dx=q.x-b.x,dy=q.y-b.y;if(dx*dx+dy*dy<1444){passBomb(q);break}}
+      if(bombT<=0&&!dying.some(x=>x[0]===b)){dying.push([b,-77]);if(state!=='over'){shake=Math.max(shake,.5);flashA=Math.max(flashA,.3)}}
+    }
+  }else if(gameMode==='sumo'){
+    const al=P.filter(q=>q.alive);
+    for(let i=0;i<al.length;i++){const a=al[i];if(a.gh>0)continue;
+      for(let j=i+1;j<al.length;j++){const b=al[j];if(b.gh>0)continue;
+        let dx=b.x-a.x,dy=b.y-a.y;const d2=dx*dx+dy*dy;
+        if(d2<1156&&d2>.01){const d=Math.sqrt(d2);dx/=d;dy/=d;
+          const pa=Math.max(0,Math.cos(a.a)*dx+Math.sin(a.a)*dy),pb=Math.max(0,-(Math.cos(b.a)*dx+Math.sin(b.a)*dy)),
+                fa=260+pa*340,fb=260+pb*340;
+          b.kx=dx*fa;b.ky=dy*fa;a.kx=-dx*fb;a.ky=-dy*fb;
+          a.lh=b.id;a.lht=t;b.lh=a.id;b.lht=t;
+          if((a.id===0||b.id===0)&&state==='play'){shake=Math.max(shake,.2);buzz(15)}}}}
+    const f=Math.pow(.04,dt);
+    for(const q of al){if(q.kx||q.ky){q.x+=q.kx*dt;q.y+=q.ky*dt;q.kx*=f;q.ky*=f;if(Math.abs(q.kx)+Math.abs(q.ky)<5)q.kx=q.ky=0}}
+  }else if(gameMode==='meteor'){
+    modeT-=dt;
+    if(t>2.5&&modeT<=0){modeT=Math.max(.3,1-t*.008);spawnMeteor();if(t>25&&Math.random()<.5)spawnMeteor()}
+  }else if(gameMode==='storm'){
+    windT-=dt;
+    if(windT<=0){windT=3.2+Math.random()*1.6;const a=Math.random()*TAU,m=100+Math.min(70,t*1.2);
+      wind={t:windT+.4,x:Math.cos(a)*m,y:Math.sin(a)*m};if(state==='play')say('🌪️ Rafale !')}
+  }
+}
+
+/* ---------- FIN DE PARTIE v2 ---------- */
+// true = en mode Chasseur, la partie s'arrête dès que le chasseur est éliminé
+const HUNT_END_ON_HUNTER=true;
+function aliveN(){let n=0;for(const q of P)if(q.alive)n++;return n}
+function gameEnded(){
+  if(aliveN()<=1)return true;
+  return HUNT_END_ON_HUNTER&&gameMode==='hunt'&&hunter>=0&&!P[hunter].alive;
+}
+// Termine la partie après ta mort : simulation accélérée jusqu'au dernier survivant.
+// Si elle n'aboutit pas à temps, mort subite : classement unique (jamais plusieurs vainqueurs).
+function endMatch(){
+  const t0=performance.now(),step=NP>12?1/15:1/30;
+  while(!gameEnded()&&performance.now()-t0<1500&&t<900)update(step);
+  const rest=P.filter(q=>q.alive);
+  const byHunt=HUNT_END_ON_HUNTER&&gameMode==='hunt'&&hunter>=0&&!P[hunter].alive;
+  if(rest.length>1&&!byHunt){
+    rest.sort((a,b)=>(b.kills-a.kills)||(NR(a.x,a.y)-NR(b.x,b.y))||(a.id-b.id));
+    rest.forEach((q,i)=>{q.rank=i+1;q.time=t;q.alive=false});
+  }else rest.forEach(q=>{q.rank=1;q.time=t;q.alive=false});
+}
 function finish(){
   state='over';
   if(RACE){const rest=P.filter(q=>!q.fin).sort((a,b)=>(b.mx||0)-(a.mx||0));rest.forEach(q=>{q.rank=++nfin;q.time=t;q.alive=false})}
-  else{let g=0;while(P.filter(q=>q.alive).length>1&&!(gameMode==='hunt'&&hunter>=0&&!P[hunter].alive)&&t<500&&g++<(NP>12?2000:30000))update(NP>12?1/12:1/30);
-  P.forEach(q=>{if(q.alive){q.rank=1;q.time=t;q.alive=false}})}
+  else endMatch();
   const me=P[0];if(RACE&&me.rank<=3){gm.coins+=[50,30,15][me.rank-1];gm.xp+=[60,35,20][me.rank-1]}let newRec=false;if(RACE&&me.fin){if(!S.rt||me.time<S.rt){newRec=!!S.rt;S.rt=me.time}if(me.rank===1)S.rw=(S.rw||0)+1}const before=lv(S.xp),xpg=Math.round(((NP>=24?2:1)*(Math.round(RACE?30:me.time)+Math.round((NP+1-me.rank)*80/NP)+me.kills*25)+gm.xp)*(window.evXpMul?evXpMul():1));
   const cg=Math.round(((NP>=24?2:1)*(Math.round(RACE?15:me.time/2)+Math.round((NP+1-me.rank)*32/NP)+me.kills*10)+gm.coins)*(window.evCoinMul?evCoinMul():1)),tg=Math.round(-8+48*(NP-me.rank)/Math.max(1,NP-1));
   const trOld=S.tr;S.xp+=xpg;S.coins+=cg;S.tr=Math.max(0,S.tr+tg);const capUp=capTier(S.tr)>capTier(trOld),capRew=capUp?25*lgTierOf(S.tr):0;S.coins+=capRew;S.games++;S.kills=(S.kills||0)+me.kills;if(me.rank===1)S.wins=(S.wins||0)+1;if(NP>=24&&me.rank<=5)S.bigTop=(S.bigTop||0)+1;if(me.kills>=3)S.k3=(S.k3||0)+1;if(me.rank<=3&&NP>=6)S.pod=(S.pod||0)+1;
@@ -2234,7 +2314,7 @@ function draw(){
     if(p.sh>0){ctx.globalAlpha=p.sh<.9&&Math.floor(now/90)%2?.3:1;ctx.beginPath();ctx.arc(p.x,p.y,21,0,TAU);ctx.fillStyle='rgba(146,153,249,.3)';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();ctx.globalAlpha=1}
   }
   for(const p of al){
-    if(p.id)tag(p.x,p.y-24,(p.hu?'🎯 ':'')+NAMES[p.id],11);else tag(p.x,p.y-34,p.hu?'🎯 TOI':'TOI',15,true);
+    if(p.id)tag(p.x,p.y-24,bombTag(p)+NAMES[p.id],11);else tag(p.x,p.y-34,bombTag(p)+'TOI',15,true);
     if(king===p.id)drawIcon(ctx,'crown',p.x,p.y-(p.id?46:58),p.id?24:28);
   }
   pops=pops.filter(q=>now-q.t<1300);
@@ -2344,17 +2424,20 @@ const KD={ArrowLeft:Math.PI,a:Math.PI,ArrowRight:0,d:0,ArrowUp:-Math.PI/2,w:-Mat
 addEventListener('keydown',e=>{if(e.key in KD&&P[0])P[0].tgt=KD[e.key]});
 
 const ABIL=[{k:'boost',i:'⚡',n:'BOOST',cd:6},{k:'shield',i:'🛡️',n:'BOUCLIER',cd:9},{k:'clean',i:'🧹',n:'NETTOYAGE',cd:10},{k:'dash',i:'🌀',n:'SAUT',cd:8},{k:'ghost',i:'👤',n:'FANTÔME',cd:11},{k:'mine',i:'💣',n:'MINE',cd:8},{k:'magnet',i:'🧲',n:'AIMANT',cd:12}];
-const MODEN={classic:'⭐ CLASSIQUE',rush:'⚡ RAPIDE',crazy:'🎢 FOLIE',hunt:'🎯 CHASSEUR',race:'🏁 COURSE'};
+const MODEN={classic:'⭐ CLASSIQUE',rush:'⚡ RAPIDE',crazy:'🎢 FOLIE',hunt:'🎯 CHASSEUR',race:'🏁 COURSE',bomb:'💣 PATATE',sumo:'🥊 SUMO',meteor:'☄️ MÉTÉORES',storm:'🌪️ TEMPÊTE'};
+const RMODES=['classic','rush','crazy','hunt','bomb','sumo','meteor','storm'];
 function mapThumb(i){const c=document.createElement('canvas');c.width=c.height=96;const x=c.getContext('2d'),m=MAPS[i],ss=SHP[m.sh||'circle'],k=42/(700*ss.ext);
   shapePath(x,m.sh||'circle',700*k,48,48);x.fillStyle='#fffdf0';x.fill();x.lineWidth=6;x.strokeStyle='#322fae';x.stroke();
   x.fillStyle='#f4a9c6';x.strokeStyle='#f4a9c6';x.lineCap='round';
   for(const o of m.o){const B=obsBox(o);x.save();x.translate(48+B.cx*k,48+B.cy*k);x.rotate(B.ang);const hl=Math.max(3,B.hl*k),hv=Math.max(3,B.hv*k);x.fillRect(-hl,-hv,hl*2,hv*2);x.restore()}
   return '<img alt="" src="'+c.toDataURL()+'">'}
-const MAPD=['Terrain dégagé, sans obstacle','6 piliers de glace en cercle','Arène carrée avec 5 piliers','Deux cercles de blocs : zigzag !','Arène en losange avec des murs de glace en X','Arène en croix : couloirs étroits !','Lac ovale avec des courants qui poussent','Labyrinthe de murs de glace en serpentin'];
-const MODED={hunt:['🎯','Un chasseur plus rapide : survis ou élimine-les tous !'],classic:['⭐','Vitesse et zone normales'],rush:['⚡','Très rapide, zone qui s\'effondre, blocs en rafale'],crazy:['🎢','Vitesse en montagnes russes, traînées géantes : accroche-toi !'],race:['🏁','Longue course sinueuse : ramasse les turbos !']};
+const MAPD=['Terrain dégagé, sans obstacle','6 piliers de glace en cercle','Arène carrée avec 5 piliers','Deux cercles de blocs : zigzag !','Arène en losange avec des murs de glace en X','Arène en croix : couloirs étroits !','Lac ovale avec des courants qui poussent','Labyrinthe de murs de glace en serpentin','Arène hexagonale : un pilier au centre, six autour','Un archipel de petits piliers : zigzague entre les îlots','Un moulin à quatre pales : tourne autour !','Une ruche de piliers en hexagone','Quatre coins fortifiés, le centre est piégé','Un tourbillon : les courants t\'emportent en rond','Deux tapis roulants en sens inverse','Forêt de piliers sur trois cercles'];
+const MODED={hunt:['🎯','Un chasseur plus rapide : survis ou élimine-les tous !'],classic:['⭐','Vitesse et zone normales'],rush:['⚡','Très rapide, zone qui s\'effondre, blocs en rafale'],crazy:['🎢','Vitesse en montagnes russes, traînées géantes : accroche-toi !'],race:['🏁','Longue course sinueuse : ramasse les turbos !'],bomb:['💣','Patate chaude : la bombe explose chez celui qui la garde. Touche quelqu\'un pour la passer !'],sumo:['🥊','Sans traînée : bouscule les autres et éjecte-les hors de la glace !'],meteor:['☄️','Pluie de météorites sans arrêt : fuis les cercles rouges !'],storm:['🌪️','Le vent change de direction toutes les secondes, et les blocs de glace tombent !']};
 const ABILD={boost:'Beaucoup plus rapide pendant 1 s',shield:'Invincible pendant 2,5 s',clean:'Efface toute ta traînée',dash:'Bond en avant par-dessus les traînées',ghost:'Traverse les traînées pendant 2 s',mine:'Pose une mine : elle élimine qui la touche',magnet:'Attire tous les bonus autour de toi'};
 function slotTone(f,dur,type,vol){if(LS.getItem('dontstop_sound')==='off')return;try{audioCtx=audioCtx||new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();const o=audioCtx.createOscillator(),g=audioCtx.createGain(),n=audioCtx.currentTime;o.type=type||'square';o.frequency.value=f;g.gain.setValueAtTime(vol||.03,n);g.gain.exponentialRampToValueAtTime(.001,n+dur);o.connect(g);g.connect(audioCtx.destination);o.start(n);o.stop(n+dur+.02)}catch(e){}}
-$('go').onclick=()=>openLobby();$('again').onclick=()=>newGame();$('tomenu').onclick=()=>menu();
+$('go').onclick=()=>openLobby();$('again').onclick=()=>{const c=window.__lastCfg;if(c){NP=c.np;gameMode=c.mode;abil=ABIL.find(a=>a.k===c.ab)||abil}
+  const L=lv(S.xp).l,cur=S.map,ok=[];MAPS.forEach((m,k)=>{if(m.l<=L&&k!==cur)ok.push(k)});
+  if(ok.length)S.map=ok[Math.random()*ok.length|0];save();newGame()};$('tomenu').onclick=()=>menu();
 
 function doAbility(){if(state!=='play'||boostCooldown>0||!P[0].alive)return;const me=P[0];
   if(abil.k==='boost')boostTime=1.2;
@@ -3421,7 +3504,7 @@ $('resumeBtn').onclick=()=>{state=pausedFrom;$('pauseModal').classList.remove('s
 $('pauseMenuBtn').onclick=()=>{$('pauseModal').classList.remove('show');menu()};
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='play')pauseGame()});
 addEventListener('keydown',e=>{if(e.key==='Escape'){if($('featureModal').classList.contains('show'))closeFeature();else if(state==='play')pauseGame();else if(state==='paused')$('resumeBtn').click()}});
-const oldNewGame=newGame;newGame=function(){oldNewGame();$('pauseBtn').style.display='block';$('boostBtn').style.display='block';$('boostIc').textContent=abil.i;$('boostName').textContent=abil.n;$('pauseBtn').textContent='Ⅱ'};
+const oldNewGame=newGame;newGame=function(){window.__lastCfg={map:S.map,np:NP,mode:gameMode,ab:abil&&abil.k};oldNewGame();$('pauseBtn').style.display='block';$('boostBtn').style.display='block';$('boostIc').textContent=abil.i;$('boostName').textContent=abil.n;$('pauseBtn').textContent='Ⅱ'};
 
 function fitHero(){const m=$('menu'),h=document.querySelector('#menu .hero');if(!m||!h||!m.classList.contains('on'))return;
   h.style.width=h.style.height='10px';let used=0;const cs=getComputedStyle(m);
@@ -4037,12 +4120,12 @@ modesEl.onclick=e=>{const b=e.target.closest('.lbChip');if(!b||busy)return;if(!u
 npEl.onclick=e=>{const b=e.target.closest('.lbChip');if(!b||busy)return;if(!unlocked){needAd();return}np=+b.dataset.n;tone(640,.05);buzz(8);refresh(np>=40?'PARTIE ÉNORME : 39 adversaires !':(np-1)+' adversaires')};
 abEl.onclick=e=>{const b=e.target.closest('.lbChip');if(!b||busy||b.disabled)return;if(!unlocked){needAd();return}ab=b.dataset.a;tone(700,.05);buzz(8);refresh(ABILD[ab])};
 
-function rnd(){const un=nodes.filter(n=>!n.lk).map(n=>n.i);sel=un[Math.random()*un.length|0];mode=Math.random()<.08?'race':['classic','rush','crazy','hunt'][Math.random()*4|0];np=Math.random()<.14?40:NPS[Math.random()*3|0];const al=ABIL.filter(a=>!(mode==='race'&&NOGH(a.k)));ab=al[Math.random()*al.length|0].k}
+function rnd(){const un=nodes.filter(n=>!n.lk).map(n=>n.i);sel=un[Math.random()*un.length|0];mode=Math.random()<.08?'race':RMODES[Math.random()*RMODES.length|0];np=Math.random()<.14?40:NPS[Math.random()*3|0];const al=ABIL.filter(a=>!(mode==='race'&&NOGH(a.k)));ab=al[Math.random()*al.length|0].k}
 function dice(){if(busy)return;busy=true;const un=nodes.filter(n=>!n.lk).map(n=>n.i);let t=0;
   const iv=setInterval(()=>{t++;const last=t>=8;
     let i;do{i=un[Math.random()*un.length|0]}while(un.length>1&&i===sel);sel=i;
-    if(last){mode=Math.random()<.08?'race':['classic','rush','crazy','hunt'][Math.random()*4|0];np=Math.random()<.14?40:NPS[Math.random()*3|0]}
-    else{mode=Object.keys(MODEN)[Math.random()*5|0];np=NPS[Math.random()*4|0]}
+    if(last){mode=Math.random()<.08?'race':RMODES[Math.random()*RMODES.length|0];np=Math.random()<.14?40:NPS[Math.random()*3|0]}
+    else{mode=Object.keys(MODEN)[Math.random()*Object.keys(MODEN).length|0];np=NPS[Math.random()*4|0]}
     const al=ABIL.filter(a=>!(mode==='race'&&NOGH(a.k)));ab=al[Math.random()*al.length|0].k;
     tone(380+t*70,.05);buzz(6);place(true);refresh(last?'C\'est parti !':'…');
     if(last){clearInterval(iv);busy=false;[523,659,784,1047].forEach((f,k)=>setTimeout(()=>tone(f,.18,'triangle',.05),k*80));buzz([20,30,60])}},230)}
@@ -4861,7 +4944,7 @@ const saveOP=()=>{try{LSRAW.setItem(OPT,JSON.stringify(OP))}catch(e){}};
 /* ---------- journal des parties : on enveloppe finish() ---------- */
 const SES={t0:Date.now(),games:0,kills:0,wins:0};
 const getLog=()=>{try{return JSON.parse(LSRAW.getItem(LOG)||'[]')}catch(e){return[]}};
-try{const _fin=finish;finish=function(){const x0=S.xp,c0=S.coins,t0=S.tr,r=_fin.apply(this,arguments);
+try{const _fin=finish;finish=function(){if(state==='over')return;const x0=S.xp,c0=S.coins,t0=S.tr,r=_fin.apply(this,arguments);
  try{const me=P[0],rec={ts:Date.now(),map:(map&&map.n)||'?',mode:gameMode,np:NP,rank:me.rank,time:+(+me.time).toFixed(1),kills:me.kills,xp:S.xp-x0,coins:S.coins-c0,tr:S.tr-t0,near:gm.near|0,dr:gm.dr|0,won:me.rank===1,cause:String(me.cause||'')};
   const L=getLog();L.push(rec);while(L.length>120)L.shift();LSRAW.setItem(LOG,JSON.stringify(L));SES.games++;SES.kills+=me.kills;if(rec.won)SES.wins++}catch(e){}
  return r}}catch(e){}
@@ -4900,7 +4983,7 @@ function line(v,col){if(v.length<2)return '<div class="note">Pas encore assez de
  const pts=v.map((x,i)=>(i/(v.length-1)*w).toFixed(1)+','+(h-(x-mn)/rg*(h-8)-4).toFixed(1)).join(' ');
  return `<svg viewBox="0 0 ${w} ${h}"><polyline points="${pts}" fill="none" stroke="${col}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/></svg>`}
 const xpFor=L=>{let x=0;for(let l=1;l<L;l++)x+=need(l);return x};
-const MODEN2={classic:'⭐ Classique',rush:'⚡ Rapide',crazy:'🎢 Folie',hunt:'🎯 Chasseur',race:'🏁 Course'};
+const MODEN2={classic:'⭐ Classique',rush:'⚡ Rapide',crazy:'🎢 Folie',hunt:'🎯 Chasseur',race:'🏁 Course',bomb:'💣 Patate',sumo:'🥊 Sumo',meteor:'☄️ Météores',storm:'🌪️ Tempête'};
 /* ---------- onglets ---------- */
 function tStats(){const L=lv(S.xp),g=S.games|0,w=S.wins|0,lg=getLog(),n=lg.length;
  const av=k=>n?(lg.reduce((a,r)=>a+(r[k]||0),0)/n):0;
