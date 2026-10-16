@@ -360,7 +360,7 @@ body{overflow-wrap:break-word}
 .accLb{font-size:13px;color:#5a5f94;margin:8px 4px 0}
 
 .lbTabs{display:flex;gap:6px;margin:10px 0 6px}.lbTabs button{flex:1;padding:9px 4px;border-radius:12px;border:2px solid #fff;background:rgba(255,255,255,.88);color:#191175;box-shadow:0 3px 0 #312ec9;font-size:12px}.lbTabs button.sel{background:#ffe329}
-.lbRow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(23,15,107,.09);margin:5px 0;font-size:14px;text-align:left}.lbRow.me{background:#ffe329;color:#170f6b}
+.lbRow{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;background:rgba(23,15,107,.09);margin:5px 0;font-size:14px;text-align:left}.lbRow.me{background:#ffe329;color:#170f6b}.lbNm{overflow:hidden;text-overflow:ellipsis}.lbOwn{font-size:13px;margin-left:2px;filter:drop-shadow(0 1px 0 rgba(0,0,0,.25))}
 .lbPos{width:28px;text-align:center;flex:none}.lbName{display:flex;flex-direction:column;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.lbName small{opacity:.65;font-size:11px}.lbRow b{margin-left:auto;white-space:nowrap}.lbMe{margin:6px 0 8px;font-size:14px}
 .navrow{gap:5px!important}.navrow button{font-size:clamp(8px,2.7vw,11px)!important;min-height:44px!important;padding:5px 1px!important;border-radius:12px!important;line-height:1.25!important;white-space:nowrap!important}
 .accAv{background-size:cover;background-position:center}.accAv.big{width:84px;height:84px;font-size:42px;margin:0 auto 10px}
@@ -3492,33 +3492,63 @@ function accThumb(a){
   im.src=a.photo;return rec.t}
 const okThumb=u=>typeof u==='string'&&u.length<14000&&/^data:image\/jpeg;base64,[A-Za-z0-9+\/=]+$/.test(u);
 setTimeout(()=>{try{accThumb(curAcc())}catch(e){}},2500);
-function postScore(){
+let lbT=0,psSig='',psLast=0,psId='',psTimer=0,psDirty=false;
+function postScore(flush){
   const a=curAcc();if(!a||!MAIL_URL)return;
-  try{fetch(MAIL_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'score',id:a.id,name:a.name,c:accCol(a),av:AVE.includes(a.av)?a.av:'',tr:S.tr,bt:+(S.bt||0).toFixed(1),w:S.wins||0,g:S.games||0,l:lv(S.xp).l,ph:accThumb(a)})}).catch(()=>{})}catch(e){}
+  const bt=+(S.bt||0).toFixed(1),lvl=lv(S.xp).l;
+  const sig=[a.id,a.name,accCol(a),a.av||'',S.tr,bt,S.wins||0,S.games||0,lvl,a.photo?a.photo.length:0].join('|');
+  if(sig===psSig&&a.id===psId){psDirty=false;return}            // rien n'a changé : on n'envoie pas
+  const wait=45000-(Date.now()-psLast);
+  if(flush!==true&&a.id===psId&&wait>0){                         // trop tôt : on regroupe, un seul envoi différé (avec décalage aléatoire)
+    psDirty=true;clearTimeout(psTimer);psTimer=setTimeout(()=>postScore(true),wait+Math.random()*8000);return}
+  clearTimeout(psTimer);psDirty=false;psSig=sig;psId=a.id;psLast=Date.now();lbT=0;
+  try{fetch(MAIL_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'score',id:a.id,name:a.name,c:accCol(a),av:AVE.includes(a.av)?a.av:'',tr:S.tr,bt:bt,w:S.wins||0,g:S.games||0,l:lvl,ph:accThumb(a)})}).catch(()=>{})}catch(e){}
 }
+// on n'oublie pas l'envoi différé quand le joueur quitte l'onglet
+addEventListener('pagehide',()=>{if(psDirty)postScore(true)});
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&psDirty)postScore(true)});
 let lbData=null,lbTab='tr';
 function lbRender(){
   const d=lbData,list=lbTab==='tr'?d.byTr:d.byBt,med=['🥇','🥈','🥉'];
-  const rows=list.map((p,i)=>`<div class="lbRow${p.m?' me':''}"><span class="lbPos">${med[i]||i+1}</span>${(()=>{const me=p.m?curAcc():null,ph=(me&&okPhoto(me))?me.photo:(okThumb(p.ph)?p.ph:'');return ph?`<span class="lbAv" style="background:url(${ph}) center/cover"></span>`:`<span class="lbAv" style="background:${okCol(p.c)?p.c:'#64748b'}">${esc(AVE.includes(p.av)?p.av:String(p.n||'?')[0].toUpperCase())}</span>`})()}<span class="lbName">${esc(p.n)}<small>Niv. ${+p.l||1} · ${+p.w||0} vict.</small></span><b>${lbTab==='tr'?'🏆 '+(+p.tr||0):(+p.bt||0).toFixed(1)+' s'}</b></div>`).join('');
+  const rows=list.map((p,i)=>`<div class="lbRow${p.m?' me':''}"><span class="lbPos">${med[i]||i+1}</span>${(()=>{const me=p.m?curAcc():null,ph=(me&&okPhoto(me))?me.photo:(okThumb(p.ph)?p.ph:'');return ph?`<span class="lbAv" style="background:url(${ph}) center/cover"></span>`:`<span class="lbAv" style="background:${okCol(p.c)?p.c:'#64748b'}">${esc(AVE.includes(p.av)?p.av:String(p.n||'?')[0].toUpperCase())}</span>`})()}<span class="lbName"><span class="lbNm">${esc(p.n)}${p.o?' <span class="lbOwn" title="Owner">👑</span>':''}</span><small>Niv. ${+p.l||1} · ${+p.w||0} vict.</small></span><b>${lbTab==='tr'?'🏆 '+(+p.tr||0):(+p.bt||0).toFixed(1)+' s'}</b></div>`).join('');
   const me=d.me?`<p class="lbMe">Ton rang : <b>#${lbTab==='tr'?d.me.rt:d.me.rb}</b> sur ${d.total} joueur${d.total>1?'s':''}</p>`:'<p class="fine">Joue une partie pour apparaître dans le classement !</p>';
   openFeature(`<h2>🏆 CLASSEMENT MONDIAL</h2><div class="lbTabs"><button data-t="tr" class="${lbTab==='tr'?'sel':''}">🏆 TROPHÉES</button><button data-t="bt" class="${lbTab==='bt'?'sel':''}">⏱️ RECORD</button></div>${me}${rows||'<p class="fine">Aucun joueur pour le moment.</p>'}<p class="fine">Ton pseudo, ta photo et tes stats sont partagés.</p>`);
   $('modalContent').querySelectorAll('.lbTabs button').forEach(b=>b.onclick=()=>{lbTab=b.dataset.t;lbRender()});
 }
-async function openTop(){
+let lbBusy=false,lbId='';
+async function lbFetch(){
+  const a=curAcc();let lastErr;
+  for(let k=0;k<3;k++){
+    const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),12000);
+    try{
+      const r=await fetch(MAIL_URL+'?a=top&id='+encodeURIComponent(a?a.id:''),{signal:ctl.signal,cache:'no-store'});
+      const d=await r.json();
+      if(!d||!Array.isArray(d.byTr)||!Array.isArray(d.byBt))throw new Error('bad');
+      return d;
+    }catch(e){lastErr=e;if(k<2)await new Promise(r=>setTimeout(r,(k?2600:1000)+Math.random()*1200))}
+    finally{clearTimeout(to)}
+  }
+  throw lastErr;
+}
+async function openTop(force){
+  const a=curAcc(),aid=a?a.id:'';
+  // données récentes déjà en mémoire : affichage instantané, aucune requête serveur
+  if(force!==true&&lbData&&lbId===aid&&Date.now()-lbT<45000){lbRender();return}
   openFeature('<h2>🏆 CLASSEMENT MONDIAL</h2><p class="fine">Chargement…</p>');
-  const a=curAcc(),ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),12000);
+  if(lbBusy)return;lbBusy=true;
   try{
-    const r=await fetch(MAIL_URL+'?a=top&id='+encodeURIComponent(a?a.id:''),{signal:ctl.signal,cache:'no-store'});
-    const d=await r.json();
+    const d=await lbFetch();
+    lbData=d;lbT=Date.now();lbId=aid;
     if(!$('featureModal').classList.contains('show'))return;
-    lbData=d;lbRender();
+    lbRender();
   }catch(e){
     if(!$('featureModal').classList.contains('show'))return;
-    openFeature('<h2>🏆 CLASSEMENT MONDIAL</h2><p>Impossible de charger le classement pour le moment. Vérifie ta connexion et réessaie.</p><button class="bigAction" id="lbRetry">RÉESSAYER</button>');
-    const b=$('lbRetry');if(b)b.onclick=openTop;
-  }finally{clearTimeout(to)}
+    if(lbData&&lbId===aid){lbRender();return}                    // serveur saturé : on montre la dernière version connue
+    openFeature('<h2>🏆 CLASSEMENT MONDIAL</h2><p>Le classement est très sollicité en ce moment. Réessaie dans quelques secondes.</p><button class="bigAction" id="lbRetry">RÉESSAYER</button>');
+    const b=$('lbRetry');if(b)b.onclick=()=>openTop(true);
+  }finally{lbBusy=false}
 }
-$('topBtn').onclick=openTop;
+$('topBtn').onclick=()=>openTop();
 let accMode='list',accSel=null,accMsg='',accDel=null,accDr={};
 function accGrab(){const n=$('accName'),p=$('accPin'),m=$('accMail');if(accMode==='edit'&&n)accDr={name:n.value,pin:p?p.value:'',mail:m?m.value:''}}
 const accFile=document.createElement('input');accFile.type='file';accFile.accept='image/*';
@@ -4739,7 +4769,7 @@ let last='';
 window.syncPush=function(force){try{const a=curAcc();if(!a||!a.key||!MAIL_URL)return;const s=snap(),str=JSON.stringify(s);
  if(!force&&str===last)return;last=str;
  fetch(MAIL_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({a:'sync',key:a.key,...s})}).catch(()=>{})}catch(e){}};
-setInterval(()=>syncPush(false),25000);setTimeout(()=>syncPush(false),4000);
+setInterval(()=>syncPush(false),45000+Math.floor(Math.random()*15000));setTimeout(()=>syncPush(false),4000+Math.floor(Math.random()*6000));
 addEventListener('pagehide',()=>syncPush(false));document.addEventListener('visibilitychange',()=>{if(document.hidden)syncPush(false)});
 window.accMake=async function(name,pin,mail){
  if(!/^\d{4}$/.test(pin)){accMsg=T2('Choisis un code à 4 chiffres : il sert à te reconnecter partout.','Pick a 4-digit code: it lets you log back in anywhere.');accRender();$('accName').value=name;$('accMail').value=mail;return}
